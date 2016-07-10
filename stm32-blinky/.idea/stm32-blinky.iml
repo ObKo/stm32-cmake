@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/main.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/CMSIS/Device/ST/STM32L1xx/Source/Templates/system_stm32l1xx.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/CMSIS/Device/ST/STM32L1xx/Source/Templates/system_stm32l1xx.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_cortex.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_cortex.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_gpio.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_gpio.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_pwr.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_pwr.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_pwr_ex.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_pwr_ex.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_rcc.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_rcc.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_rcc_ex.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_rcc_ex.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_tim.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_tim.c" isTestSource="false" />
+    </content>
+    <content url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_tim_ex.c">
+      <sourceFolder url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_tim_ex.c" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/lib/arm-none-eabi/include" />
+          <root url="file:///usr/lib/gcc/arm-none-eabi/4.9.3/include" />
+          <root url="file:///usr/lib/gcc/arm-none-eabi/4.9.3/include-fixed" />
+          <root url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Inc" />
+          <root url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/CMSIS/Device/ST/STM32L1xx/Include" />
+          <root url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/CMSIS/Include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/lib/arm-none-eabi/include" />
+          <root url="file:///usr/lib/gcc/arm-none-eabi/4.9.3/include" />
+          <root url="file:///usr/lib/gcc/arm-none-eabi/4.9.3/include-fixed" />
+          <root url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/STM32L1xx_HAL_Driver/Inc" />
+          <root url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/CMSIS/Device/ST/STM32L1xx/Include" />
+          <root url="file:///opt/STM32Cube_FW_L1_V1.5.0/Drivers/CMSIS/Include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>

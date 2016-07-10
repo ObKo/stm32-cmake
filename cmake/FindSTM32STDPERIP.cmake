@@ -6,7 +6,7 @@ IF(STM32_FAMILY STREQUAL "L1")
     SET(HAL_REQUIRED_COMPONENTS cortex pwr rcc)
 
     # Components that have _ex sources
-    SET(HAL_EX_COMPONENTS adc crc dac flash i2c pcd pwr rcc rtc smartcard spi tim)
+    SET(HAL_EX_COMPONENTS adc crc dac flash i2c pcd pwr rcc rtc smartcard spi tim uart)
 
     # Components that have ll_ in names instead of hal_
     SET(HAL_LL_COMPONENTS "")
