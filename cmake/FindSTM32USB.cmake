@@ -2,16 +2,16 @@ SET(USB_CLASSES AUDIO CDC CustomHID DFU HID MSC)
 
 SET(USB_PREFIX usbd_)
 
-    SET(USB_HEADERS
-            Core/Inc/usbd_def.h
-            Core/Inc/usbd_core.h
-            Core/Inc/usbd_ctlreq.h
-            Core/Inc/usbd_ioreq.h
-    )
+SET(USB_HEADERS
+        Core/Inc/usbd_def.h
+        Core/Inc/usbd_core.h
+        Core/Inc/usbd_ctlreq.h
+        Core/Inc/usbd_ioreq.h
+)
 
-    SET(USB_INCLUDE_DIR
-            Core/Inc
-    )
+SET(USB_INCLUDE_DIR
+        Core/Inc
+)
 SET(USB_SRCS
     Core/Src/usbd_core.c
     Core/Src/usbd_ctlreq.c
@@ -37,14 +37,12 @@ FOREACH(cmp ${STM32USB_FIND_COMPONENTS})
     ENDIF()
 	STRING(TOLOWER ${cmp} cmp_lower)	
     IF(NOT (${STM32USB_FOUND_INDEX} LESS 0))
-        LIST(APPEND USB_HEADERS Class/${cmp}/Inc/${USB_PREFIX}${cmp_lower}.h)
-#        LIST(APPEND USB_DIRS Class/${cmp}/Inc)
+        LIST(APPEND USB_HEADERS Class/${cmp}/Inc/${USB_PREFIX}${cmp_lower}.h) #        LIST(APPEND USB_DIRS Class/${cmp}/Inc)
         LIST(APPEND USB_SRCS Class/${cmp}/Src/${USB_PREFIX}${cmp_lower}.c)
     ENDIF()
 ENDFOREACH()
 
 LIST(REMOVE_DUPLICATES USB_HEADERS)
-#LIST(REMOVE_DUPLICATES USB_DIRS)
 LIST(REMOVE_DUPLICATES USB_SRCS)
 
 STRING(TOLOWER ${STM32_FAMILY} STM32_FAMILY_LOWER)
@@ -72,7 +70,7 @@ FOREACH(USB_INC ${USB_HEADERS})
 ENDFOREACH()
 LIST(REMOVE_DUPLICATES STM32USB_INCLUDE_DIR)
 FOREACH(USB_SRC ${USB_SRCS})
-    SET(USB_${USB_SRC}_FILE USB_SRC_FILE-NOTFOUND)
+    SET(USB_${USB_SRC}_FILE USB_${USB_SRC}_FILE-NOTFOUND)
     FIND_FILE(USB_${USB_SRC}_FILE ${USB_SRC}
             HINTS ${STM32Cube_DIR}/Middlewares/ST/STM32_USB_Device_Library
             CMAKE_FIND_ROOT_PATH_BOTH
