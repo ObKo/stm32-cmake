@@ -17,7 +17,7 @@ def env(ctx):
 @task(env)
 def all(ctx):
 	print("all...")
-	do(ctx, BUILD_PATH, '"{}" -j8 all'.format(ctx.make.gnu_mingw32_make))
+	do(ctx, BUILD_PATH, '"{}" all'.format(ctx.make.gnu_arm_make))
 
 
 @task(all)
@@ -29,7 +29,7 @@ def make(ctx):
 @task(env)
 def clean(ctx):
 	print("clean...")
-	do(ctx, BUILD_PATH, '"{}" clean'.format(ctx.make.gnu_mingw32_make))
+	do(ctx, BUILD_PATH, '"{}" clean'.format(ctx.make.gnu_arm_make))
 
 
 @task
