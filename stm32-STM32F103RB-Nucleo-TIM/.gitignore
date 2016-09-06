@@ -1,7 +1,7 @@
-/Debug
+/Debug*/
 /Release/
 /Default/
 .settings
 /*.pydevproject
 /*.pyc
-/build*
+/build*/
