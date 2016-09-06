@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>stm32-blinky</name>
+	<name>stm32-STM32F103RB-Nucleo-TIM</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -29,16 +29,4 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>org.python.pydev.pythonNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>_CMSIS</name>
-			<type>2</type>
-			<location>C:/workdir/libs/stm32/STM32Cube_FW_F1_V1.4.0/Drivers/CMSIS</location>
-		</link>
-		<link>
-			<name>_STM32F1xx_HAL_Driver</name>
-			<type>2</type>
-			<location>C:/workdir/libs/stm32/STM32Cube_FW_F1_V1.4.0/Drivers/STM32F1xx_HAL_Driver</location>
-		</link>
-	</linkedResources>
 </projectDescription>

@@ -1,5 +1,0 @@
-SET(TOOLCHAIN_PREFIX "c:/Program Files (x86)/GNU Tools ARM Embedded/4.9 2015q1" CACHE PATH "toolchain prefix")
-SET(CMAKE_MODULE_PATH "e:/github_c/stm32-cmake/cmake" CACHE PATH "cmake module path")
-SET(CMAKE_TOOLCHAIN_FILE "e:/github_c/stm32-cmake/cmake/gcc_stm32.cmake" CACHE FILEPATH "toolchain file")
-SET(STM32_CHIP "STM32F103RB" CACHE STRING "stm32 chip")
-SET(STM32Cube_DIR "c:/workdir/libs/stm32/STM32Cube_FW_F1_V1.4.0" CACHE PATH "cube path")
