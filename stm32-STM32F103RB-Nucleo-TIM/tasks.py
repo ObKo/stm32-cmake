@@ -1,10 +1,5 @@
-
-from invocations.docs import docs
-from invoke import Collection
 from invoke import run, config, task
 import os
-from subprocess import check_call, call
-import contextlib
 import shutil
 
 root = lambda p: os.path.abspath(os.path.dirname(__file__) + '/' + p)
