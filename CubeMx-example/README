@@ -1,0 +1,12 @@
+This example for stm32f4discovery
+
+Open f4discovery.ioc
+Check project settings
+
+Generate code
+
+run for examle on Windows
+
+cmake -DTOOLCHAIN_PREFIX=C:/STM32/tools -DCMAKE_MODULE_PATH=C:/STM32/libs/stm32-cmake/cmake -DCMAKE_TOOLCHAIN_FILE=C:/STM32/libs/stm32-cmake/cmake/gcc_stm32.cmake -DSTM32Cube_DIR=C:/Users/user/STM32Cube/Repository/STM32Cube_FW_F4_V1.10.0 -DCMAKE_BUILD_TYPE=Debug
+
+
