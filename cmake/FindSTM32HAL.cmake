@@ -110,6 +110,32 @@ ELSEIF(STM32_FAMILY STREQUAL "F3")
     )
 ELSEIF(STM32_FAMILY STREQUAL "F4")
     SET(HAL_COMPONENTS adc can cec cortex crc cryp dac dcmi dma dma2d eth flash
+            flash_ramfunc fmpi2c gpio hash hcd i2c i2s irda iwdg ltdc
+            nand nor pccard pcd pwr qspi rcc rng rtc sai sd sdram
+            smartcard spdifrx spi sram tim uart usart wwdg fmc fsmc
+            sdmmc usb)
+
+    SET(HAL_REQUIRED_COMPONENTS cortex pwr rcc)
+
+    # Components that have _ex sources
+    SET(HAL_EX_COMPONENTS adc cryp dac dcmi dma flash fmpi2c hash i2c i2s pcd
+            pwr rcc rtc sai tim)
+
+    # Components that have ll_ in names instead of hal_
+    SET(HAL_LL_COMPONENTS fmc fsmc sdmmc usb)
+
+    SET(HAL_PREFIX stm32f4xx_)
+
+    SET(HAL_HEADERS
+            stm32f4xx_hal.h
+            stm32f4xx_hal_def.h
+            )
+
+    SET(HAL_SRCS
+            stm32f4xx_hal.c
+            )
+ELSEIF(STM32_FAMILY STREQUAL "L4")
+    SET(HAL_COMPONENTS adc can cec cortex crc cryp dac dcmi dma dma2d eth flash
                        flash_ramfunc fmpi2c gpio hash hcd i2c i2s irda iwdg ltdc
                        nand nor pccard pcd pwr qspi rcc rng rtc sai sd sdram
                        smartcard spdifrx spi sram tim uart usart wwdg fmc fsmc
@@ -124,15 +150,15 @@ ELSEIF(STM32_FAMILY STREQUAL "F4")
     # Components that have ll_ in names instead of hal_
     SET(HAL_LL_COMPONENTS fmc fsmc sdmmc usb)
 
-    SET(HAL_PREFIX stm32f4xx_)
+    SET(HAL_PREFIX stm32l4xx_)
 
     SET(HAL_HEADERS
-        stm32f4xx_hal.h
-        stm32f4xx_hal_def.h
+        stm32l4xx_hal.h
+        stm32l4xx_hal_def.h
     )
 
     SET(HAL_SRCS
-        stm32f4xx_hal.c
+        stm32l4xx_hal.c
     )
 ELSEIF(STM32_FAMILY STREQUAL "F7")
     SET(HAL_COMPONENTS adc can cec cortex crc cryp dac dcmi dma dma2d eth flash
