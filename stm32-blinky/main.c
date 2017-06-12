@@ -15,11 +15,12 @@ void initGPIO()
     GPIO_Config.Speed = GPIO_SPEED_HIGH;
 
 #if defined STM32F1
-    __GPIOC_CLK_ENABLE();
+    // configure GPIO PA10 for TIM1_CH3 alternate function
+    __GPIOA_CLK_ENABLE();
     __AFIO_CLK_ENABLE();
 
-    GPIO_Config.Pin = GPIO_PIN_8;
-    HAL_GPIO_Init(GPIOC, &GPIO_Config);
+    GPIO_Config.Pin = GPIO_PIN_10;
+    HAL_GPIO_Init(GPIOA, &GPIO_Config);
 #elif defined STM32F2
     __GPIOD_CLK_ENABLE();
 
@@ -41,8 +42,8 @@ void initTimers()
 
     // 10 kHz timer.
 #if defined STM32F1
-    __TIM8_CLK_ENABLE();
-    TIM_Handle.Instance = TIM8;
+    __TIM1_CLK_ENABLE();
+    TIM_Handle.Instance = TIM1;
     TIM_Handle.Init.Prescaler = (uint16_t)(HAL_RCC_GetPCLK2Freq() / 10000) - 1;
 #elif defined STM32F2
     __TIM4_CLK_ENABLE();
