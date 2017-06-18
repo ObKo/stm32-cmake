@@ -77,11 +77,10 @@ You can use cmake variables below to tune the generated linker. To specify a cus
 ## Useful cmake macros
 
 * `STM32_GET_CHIP_TYPE(CHIP CHIP_TYPE)` - gets chip type from chip name.
-* `STM32_GET_CHIP_PARAMETERS(CHIP FLASH_SIZE RAM_SIZE CCRAM_SIZE)` - gets chip ram/flash size from chip name.
+* `STM32_GET_CHIP_PARAMETERS(CHIP FLASH_ORIGIN FLASH_SIZE RAM_ORIGIN RAM_SIZE CCRAM_ORIGIN CCRAM_SIZE)` - gets chip ram/flash size from chip name.
 * `STM32_SET_FLASH_PARAMS(TARGET ...)` - sets chip flash/ram parameters for target.
 * `STM32_SET_CHIP_DEFINITIONS(TARGET CHIP_TYPE)` - sets chip family and type-specific compiler flags for target.
 * `STM32_SET_TARGET_PROPERTIES(TARGET)` - sets all needed parameters and compiler flags for target.
-* `STM32_GENERATE_LIBRARIES(NAME SOURCES LIBRARIES)` - generates libraries for all chip types in family. Resulting libraries stored in LIBRARIES and have names in ${NAME}_${FAMILY}_${CHIP_TYPE} format.
 
 # ChibiOS Support
 

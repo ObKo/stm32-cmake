@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import re
+
+
+def printHal(variable, hal, comment=None):
+    indent = ' '*4
+    if comment:
+        print(indent + comment)
+    text = indent + 'SET(' + variable
+    if len(hal) > 0:
+        blockIndent = ' '*len(text)
+        for component in sorted(set(hal)):
+            if (len(text) + len(component)) >= 79:
+                print(text)
+                text = blockIndent
+            text += ' ' + component
+    else:
+        text += ' ""'
+    print(text + ')\n')
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Get the list HAL items')
+    parser.add_argument('-c', '--cube', help='STM32Cube FW location', required=True)
+    args = parser.parse_args()
+
+    match = re.search('STM32Cube_FW_(?P<family>[FL][0-47])_V[0-9.]*', args.cube)
+    if match is None:
+        print('Chip family not found.')
+        exit(1)
+    family = match.group('family')
+
+    print('Family:', family)
+
+    reHal = re.compile('^stm32{0}xx_(?P<type>(hal|ll))_(?P<name>[a-z0-9_]+?)(_(?P<suffix>(ex|template)))?\.c$'.format(family.lower()))
+
+    hal = []
+    ex = []
+    ll = []
+    halSrc = os.path.join(args.cube, 'Drivers/STM32{0}xx_HAL_Driver/Src'.format(family))
+    for name in os.listdir(halSrc):
+        match = reHal.search(name)
+        if match is None:
+            continue
+        if match.group('suffix') == 'template':
+            continue
+        component = match.group('name')
+        if match.group('type') == 'hal':
+            hal.append(component)
+            if match.group('suffix') == 'ex':
+                ex.append(component)
+        if match.group('type') == 'll':
+            ll.append(component)
+    ll = [name for name in ll if name not in hal]
+    hal.extend(ll)
+
+    printHal('HAL_COMPONENTS', hal)
+
+    printHal('HAL_REQUIRED_COMPONENTS', ['cortex', 'pwr', 'rcc'])
+
+    printHal('HAL_EX_COMPONENTS', ex, '# Components that have _ex sources')
+
+    printHal('HAL_LL_COMPONENTS', ll, '# Components that have ll_ in names instead of hal_')
+
+
+if __name__ == '__main__':
+    main()
