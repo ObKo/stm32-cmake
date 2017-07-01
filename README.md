@@ -89,3 +89,9 @@ This project also supports ChibiOS v3.x.x and ChibiOS v16.x.x (both nil and rt k
 CMake modules for ChibiOS can find specified ChibiOS components using the COMPONENTS directive.
 
 See project `stm32-chibios` for example usage.
+
+# FreeRTOS Support
+
+This project also supports FreeRTOS from STM32Cube.
+
+COMPONTS is used to select the configured memory manager.
