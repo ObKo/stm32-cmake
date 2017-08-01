@@ -77,11 +77,10 @@ You can use cmake variables below to tune the generated linker. To specify a cus
 ## Useful cmake macros
 
 * `STM32_GET_CHIP_TYPE(CHIP CHIP_TYPE)` - gets chip type from chip name.
-* `STM32_GET_CHIP_PARAMETERS(CHIP FLASH_SIZE RAM_SIZE CCRAM_SIZE)` - gets chip ram/flash size from chip name.
+* `STM32_GET_CHIP_PARAMETERS(CHIP FLASH_ORIGIN FLASH_SIZE RAM_ORIGIN RAM_SIZE CCRAM_ORIGIN CCRAM_SIZE)` - gets chip ram/flash size from chip name.
 * `STM32_SET_FLASH_PARAMS(TARGET ...)` - sets chip flash/ram parameters for target.
 * `STM32_SET_CHIP_DEFINITIONS(TARGET CHIP_TYPE)` - sets chip family and type-specific compiler flags for target.
 * `STM32_SET_TARGET_PROPERTIES(TARGET)` - sets all needed parameters and compiler flags for target.
-* `STM32_GENERATE_LIBRARIES(NAME SOURCES LIBRARIES)` - generates libraries for all chip types in family. Resulting libraries stored in LIBRARIES and have names in ${NAME}_${FAMILY}_${CHIP_TYPE} format.
 
 # ChibiOS Support
 
@@ -90,3 +89,9 @@ This project also supports ChibiOS v3.x.x and ChibiOS v16.x.x (both nil and rt k
 CMake modules for ChibiOS can find specified ChibiOS components using the COMPONENTS directive.
 
 See project `stm32-chibios` for example usage.
+
+# FreeRTOS Support
+
+This project also supports FreeRTOS from STM32Cube.
+
+COMPONTS is used to select the configured memory manager.

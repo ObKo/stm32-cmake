@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import re
+import sys
+
+from lxml import etree
+
+
+def getMemory(tree, name):
+    memory = tree.xpath('memories/memory[@name="{0}"]'.format(name))
+    if len(memory) >= 1:
+        return memory[0]
+    else:
+        return None
+
+
+def getFile(tree, xp):
+    path = tree.xpath(xp)
+    if len(path) >= 1:
+        return os.path.basename(path[0].replace('\\', '/'))
+    else:
+        return ""
+
+
+def formatMemory(memory):
+    if memory is not None:
+        return ' {0} {1}K'.format(memory.get('start'), memory.get('size'))
+    else:
+        return ' 0x00000000 0K'
+
+
+def main():
+    projectRoot = os.path.abspath(os.path.dirname(os.path.realpath(sys.argv[0])) + '/..')
+
+    parser = argparse.ArgumentParser(description='Creates parameters files for stm32-cmake from STM32CubeMX database')
+    parser.add_argument('-db', '--database', help='STM32CubeMX database location', default='/opt/STM32CubeMX/devices')
+    parser.add_argument('-o', '--out', help='output folder', default=os.path.join(projectRoot, 'cmake'))
+    args = parser.parse_args()
+
+    reFileName = re.compile('^stm32((f[0-47])|(l[014]))\.db$', re.IGNORECASE)
+
+    for db in os.listdir(args.database):
+        if not reFileName.search(db):
+            continue
+
+        treeFamily = etree.parse(os.path.join(args.database, db))
+        familyName = treeFamily.xpath('/family/@name')[0]
+
+        devList = ""
+        devices = treeFamily.xpath('/family/subFamily/device')
+        for device in devices:
+            partNumber = device.xpath('PN/text()')[0].split(',')[0]
+
+            flash = getMemory(device, 'FLASH')
+            ram = getMemory(device, 'RAM')
+            ccram = getMemory(device, 'CCMRAM')
+
+            define = device.xpath('define/text()')[0]
+
+            header = getFile(device, 'header/text()')
+            startup = getFile(device, 'TrueSTUDIO/startup/text()')
+
+            devList += 'SET(DEV_{0}'.format(partNumber)
+            devList += formatMemory(flash)
+            devList += formatMemory(ram)
+            devList += formatMemory(ccram)
+            devList += ' ' + define
+            devList += ' ' + header
+            devList += ' ' + startup
+            devList += ')\n'
+
+        with open(os.path.join(args.out, "dev_" + familyName.lower() + '.cmake'), 'w') as outFile:
+            for i, name in enumerate(
+                ['DEV_TABLE_FLASH_START', 'DEV_TABLE_FLASH_SIZE',
+                 'DEV_TABLE_RAM_START', 'DEV_TABLE_RAM_SIZE',
+                 'DEV_TABLE_CCRAM_START', 'DEV_TABLE_CCRAM_SIZE',
+                 'DEV_TABLE_DEFINE', 'DEV_TABLE_HEADER', 'DEV_TABLE_STARTUP']):
+                outFile.write('SET({0} {1})\n'.format(name, i))
+            outFile.write(devList)
+
+
+if __name__ == '__main__':
+    main()
