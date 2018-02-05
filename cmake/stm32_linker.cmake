@@ -21,7 +21,7 @@ ENDIF()
 
 SET(STM32_LINKER_SCRIPT_TEXT
   "ENTRY(Reset_Handler)\n"
-  "_estack = ${STM32_RAM_ORIGIN} + ${STM32_RAM_SIZE} - 1\;\n"
+  "_estack = (${STM32_RAM_ORIGIN} + ${STM32_RAM_SIZE} - 1) & 0xFFFFFFF8\;\n"
   "_Min_Heap_Size = ${STM32_MIN_HEAP_SIZE}\;\n"
   "_Min_Stack_Size = ${STM32_MIN_STACK_SIZE}\;\n"
   "MEMORY\n"
@@ -114,7 +114,7 @@ SET(STM32_LINKER_SCRIPT_TEXT
   "    PROVIDE ( _end = . )\;\n"
   "    . = . + _Min_Heap_Size\;\n"
   "    . = . + _Min_Stack_Size\;\n"
-  "    . = ALIGN(4)\;\n"
+  "    . = ALIGN(8)\;\n"
   "  } >RAM\n"
   "  /DISCARD/ :\n"
   "  {\n"
