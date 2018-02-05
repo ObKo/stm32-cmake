@@ -5,7 +5,7 @@ SET(CMAKE_ASM_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softf
 SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "executable linker flags")
 SET(CMAKE_MODULE_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "module linker flags")
 SET(CMAKE_SHARED_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "shared linker flags")
-SET(STM32_CHIP_TYPES 431xx 432xx 433xx 442xx 443xx 451xx 452xx 462xx 471xx 475xx 476xx 485xx 486xx 496xx 4a6xx 4r5xx 4r7xx 4r9xx 4s5xx 4s7xx 4s9xx CACHE INTERNAL "stm32l4 chip types")
+SET(STM32_CHIP_TYPES 431xx 432xx 433xx 442xx 443xx 451xx 452xx 462xx 471xx 475xx 476xx 486xx 496xx 4a6xx 4r5xx 4r7xx 4r9xx 4s5xx 4s7xx 4s9xx CACHE INTERNAL "stm32l4 chip types")
 SET(STM32_CODES "431.." "432.." "433.." "442.." "443.." "451.." "452.." "462.." "471.." "475.." "476.." "486.." "496.." "4a6.." "4r5.." "4r7.." "4r9.." "4s5.." "4s7.." "4s9..")
 
 MACRO(STM32_GET_CHIP_TYPE CHIP CHIP_TYPE)
