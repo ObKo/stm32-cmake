@@ -6,7 +6,7 @@ SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mfpu=fpv4
 SET(CMAKE_MODULE_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "module linker flags")
 SET(CMAKE_SHARED_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "shared linker flags")
 SET(STM32_CHIP_TYPES 431xx 432xx 433xx 442xx 443xx 451xx 452xx 462xx 471xx 475xx 476xx 485xx 486xx 496xx 4a6xx 4r5xx 4r7xx 4r9xx 4s5xx 4s7xx 4s9xx CACHE INTERNAL "stm32l4 chip types")
-SET(STM32_CODES "431.." "432.." "433.." "442.." "443.." "451.." "452.." "462.." "471.." "475.." "476.." "485.." "486.." "496.." "4a6.." "4r5.." "4r7.." "4r9.." "4s5.." "4s7.." "4s9..")
+SET(STM32_CODES "431.." "432.." "433.." "442.." "443.." "451.." "452.." "462.." "471.." "475.." "476.." "485.." "486.." "496.." "4A6.." "4R5.." "4R7.." "4R9.." "4S5.." "4S7.." "4S9..")
 
 MACRO(STM32_GET_CHIP_TYPE CHIP CHIP_TYPE)
     STRING(REGEX REPLACE "^[sS][tT][mM]32[lL](4[3456789ARS][1235679].[BCEGI]).*$" "\\1" STM32_CODE ${CHIP})
