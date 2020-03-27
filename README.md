@@ -101,3 +101,13 @@ SET(FREERTOS_HEAP_IMPL 4)
 ```
 
 before `FIND_PACKAGE` command.
+
+
+# Bash  One Liner
+```console
+bash <(curl -s https://raw.githubusercontent.com/stefaneicher/stm32-cmake/master/cloneAndBuild.sh)
+```
+
+```console
+bash <(curl -s https://raw.githubusercontent.com/stefaneicher/stm32-cmake/master/cloneAndBuildInDockerTimed.sh)
+```
