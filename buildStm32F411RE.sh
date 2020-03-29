@@ -19,3 +19,4 @@ cmake -DCMAKE_BUILD_TYPE=Debug  \
 cmake --build . --target stm32-blinky -- -j 4
 cmake --build . --target stm32-blinky.bin -- -j 4
 cmake --build . --target stm32-blinky.hex -- -j 4
+cmake --build . --target stm32-blinky.dump -- -j 4
