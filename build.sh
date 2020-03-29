@@ -6,4 +6,4 @@ docker run -i --rm --net=host  \
 --volume $PWD:/$PWD \
 stm32-cmake-stefaneicher_build \
 bash \
--c "cd /$PWD && ls -l && ./buildStm32F411RE.sh" \
+-c "cd /$PWD && ./buildStm32l152RE.sh && ./buildStm32F411RE.sh" \
