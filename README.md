@@ -107,7 +107,3 @@ before `FIND_PACKAGE` command.
 ```console
 bash <(curl -s https://raw.githubusercontent.com/stefaneicher/stm32-cmake/master/cloneAndBuild.sh)
 ```
-
-```console
-bash <(curl -s https://raw.githubusercontent.com/stefaneicher/stm32-cmake/master/cloneAndBuildInDockerTimed.sh)
-```
