@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cortex Debug Student",
+            "cwd": "${workspaceRoot}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": ["@OPENOCD_BOARD@"],
+            "preLaunchTask": "BuildFlash",
+            "armToolchainPath": "@TOOLCHAIN_PREFIX@/bin/",
+            "runToMain": true,
+            "svdFile": "@SVD_SOURCE@/data/STMicro/@STM32_TARGET@.svd"
+        }
+    ]
+}

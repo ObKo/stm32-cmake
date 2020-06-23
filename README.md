@@ -23,6 +23,7 @@ This project is used to develop applications for the STM32 - ST's ARM Cortex-Mx 
 * `stm32-blinky` - blink LED using timers and PWM.
 * `stm32-newlib` - show date using uart and libc functions from newlib.
 * `stm32-chibios` - blink led using ChibiOS/NIL.
+* `stm32-std-freertos-ugfx` - Basic [uGFX](https://ugfx.io/) graphical application utilizing the standard peripheral library from STM and FreeRTOS (No HAL wrapping). Targets a STM32F4 Discovery board. Can be found in a maintained state [here](https://github.com/alxhoff/STM32-uGFX-Cmake). 
 
 # Usage
 

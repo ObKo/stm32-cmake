@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "intelliSenseMode": "clang-x64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "@CMAKE_LIBRARY_PATH@/STM32F4-Cube-Firmware/**",
+                "@CMAKE_LIBRARY_PATH@/STM32F429I-Discovery-Firmware/**",
+                "@CMAKE_LIBRARY_PATH@/STM32F4xx-standard-peripherals-library/**",
+                "@CMAKE_LIBRARY_PATH@/uGFX-Fork/**"
+            ],
+            "defines": [],
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}
