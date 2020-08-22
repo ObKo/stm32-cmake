@@ -21,9 +21,11 @@ This project is used to develop applications for the STM32 - ST's ARM Cortex-Mx 
 ## Examples
 
 * `stm32-blinky` - blink LED using timers and PWM.
+* `stm32-docker` - Compile blinky example using [stm32-cmake](https://hub.docker.com/repository/docker/cortesja/stm32-cmake) docker image.
+See its [README.md](stm32-docker/README.md) for more details.
 * `stm32-newlib` - show date using uart and libc functions from newlib.
 * `stm32-chibios` - blink led using ChibiOS/NIL.
-* `stm32-hal-freertos-uart-tensorflow` - HAL OS (FreeRTOS) example using UART 
+* `stm32-hal-freertos-uart-tensorflow` - HAL OS (FreeRTOS) example using UART
     and TensorFlow Lite Micro to perform sine wave interpolation with
     `flash` (`st-flash`) and `debug` (`openocd` +  `gdb`) targets.
 
