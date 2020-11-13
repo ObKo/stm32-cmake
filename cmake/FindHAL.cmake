@@ -246,15 +246,22 @@ foreach(COMP ${HAL_FIND_COMPONENTS_FAMILIES})
         PATHS "${HAL_${FAMILY}_PATH}/Inc"
         NO_DEFAULT_PATH
     )
-    find_file(HAL_${FAMILY}${CORE_U}_SOURCE
-        NAMES stm32${FAMILY_L}xx_hal.c
-        PATHS "${HAL_${FAMILY}_PATH}/Src"
-        NO_DEFAULT_PATH
-    )
-    
-    if ((NOT HAL_${FAMILY}${CORE_U}_INCLUDE) OR (NOT HAL_${FAMILY}${CORE_U}_SOURCE))
+    if (NOT HAL_${FAMILY}${CORE_U}_INCLUDE)
         set(HAL_${COMP}_FOUND FALSE)
         continue()
+    endif()
+
+    if (${HAL_FIND_COMPONENTS_DRIVERS})
+        find_file(HAL_${FAMILY}${CORE_U}_SOURCE
+            NAMES stm32${FAMILY_L}xx_hal.c
+            PATHS "${HAL_${FAMILY}_PATH}/Src"
+            NO_DEFAULT_PATH
+        )
+
+        if (NOT HAL_${FAMILY}${CORE_U}_SOURCE)
+            set(HAL_${COMP}_FOUND FALSE)
+            continue()
+        endif()
     endif()
 
     if(NOT (TARGET HAL::STM32::${FAMILY}${CORE_C}))
