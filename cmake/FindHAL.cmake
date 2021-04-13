@@ -171,6 +171,20 @@ set(HAL_LL_DRIVERS_L5
     rng rtc sdmmc spi tim ucpd usart usb utils
 )
 
+set(HAL_DRIVERS_MP1
+    adc cec cortex crc cryp dac dcmi dfsdm dma exti fdcan gpio hash hsem i2c
+    ipcc lptim mdios mdma pwr qspi rcc rng rtc sai sd smartcard smbus spdifrx
+    spi sram tim uart usart wwdg
+)
+set(HAL_EX_DRIVERS_MP1
+    adc crc cryp dac dfsdm dma hash i2c pwr rcc rtc sai sd smartcard spi tim
+    uart usart
+)
+set(HAL_LL_DRIVERS_MP1
+    adc delayblock dma exti fmc gpio i2c lptim pwr rcc rtc sdmmc spi tim usart
+    utils
+)
+
 foreach(FAMILY_SUFFIX ${STM32_SUPPORTED_FAMILIES_SHORT_NAME})
     list(APPEND HAL_DRIVERS ${HAL_DRIVERS_${FAMILY_SUFFIX}})
     list(APPEND HAL_LL_DRIVERS ${HAL_LL_DRIVERS_${FAMILY_SUFFIX}})
@@ -233,7 +247,7 @@ foreach(COMP ${HAL_FIND_COMPONENTS_FAMILIES})
         unset(CORE_C)
         unset(CORE_U)
     endif()
-        
+
     set(FAMILY ${CMAKE_MATCH_1})
     string(TOLOWER ${FAMILY} FAMILY_L)
     
