@@ -2,10 +2,11 @@ set(STM32_SUPPORTED_FAMILIES_LONG_NAME
     STM32F0 STM32F1 STM32F2 STM32F3 STM32F4 STM32F7
     STM32G0 STM32G4
     STM32H7_M4 STM32H7_M7
-    STM32L0 STM32L1 STM32L4 STM32L5)
+    STM32L0 STM32L1 STM32L4 STM32L5
+    STM32MP1)
 
 foreach(FAMILY ${STM32_SUPPORTED_FAMILIES_LONG_NAME})
-    string(REGEX MATCH "^STM32([A-Z][0-9])_?(M[47])?" FAMILY ${FAMILY})
+    string(REGEX MATCH "^STM32([A-Z]P?[0-9])_?(M[47])?" FAMILY ${FAMILY})
     list(APPEND STM32_SUPPORTED_FAMILIES_SHORT_NAME ${CMAKE_MATCH_1})
 endforeach()
 list(REMOVE_DUPLICATES STM32_SUPPORTED_FAMILIES_SHORT_NAME)
@@ -45,6 +46,7 @@ function(stm32_get_chip_type FAMILY DEVICE TYPE)
         endif()
         math(EXPR INDEX "${INDEX}+1")
     endforeach()
+
     if(NOT RESULT_TYPE)
         message(FATAL_ERROR "Invalid/unsupported device: ${DEVICE}")
     endif()
@@ -59,7 +61,7 @@ function(stm32_get_chip_info CHIP)
         
     string(TOUPPER ${CHIP} CHIP)
         
-    string(REGEX MATCH "^STM32([A-Z][0-9])([0-9A-Z][0-9][A-Z][0-9A-Z]).*$" CHIP ${CHIP})
+    string(REGEX MATCH "^STM32([A-Z]P?[0-9])([0-9A-Z][0-9][A-Z][0-9A-Z]).*$" CHIP ${CHIP})
     
     if((NOT CMAKE_MATCH_1) OR (NOT CMAKE_MATCH_2))
         message(FATAL_ERROR "Unknown chip ${CHIP}")
@@ -67,7 +69,6 @@ function(stm32_get_chip_info CHIP)
     
     set(STM32_FAMILY ${CMAKE_MATCH_1})
     set(STM32_DEVICE "${CMAKE_MATCH_1}${CMAKE_MATCH_2}")
-
 
     if(NOT (${STM32_FAMILY} IN_LIST STM32_SUPPORTED_FAMILIES_SHORT_NAME))
         message(FATAL_ERROR "Unsupported family ${STM32_FAMILY} for device ${CHIP}")
@@ -129,9 +130,11 @@ function(stm32_get_memory_info)
         stm32_get_chip_type(${INFO_FAMILY} ${INFO_DEVICE} INFO_TYPE)
     endif()
     
-    string(REGEX REPLACE "^[FGHL][0-9][0-9A-Z][0-9].([3468BCDEFGHIZ])$" "\\1" SIZE_CODE ${INFO_DEVICE})
-    
-    if(SIZE_CODE STREQUAL "3")
+    string(REGEX REPLACE "^[FGHLM]P?[0-9][0-9A-Z][0-9].([3468ABCDEFGHIZ])$" "\\1" SIZE_CODE ${INFO_DEVICE})
+
+    if(SIZE_CODE STREQUAL "A")
+        set(FLASH "0K")
+     elseif(SIZE_CODE STREQUAL "3")
         set(FLASH "8K")
     elseif(SIZE_CODE STREQUAL "4")
         set(FLASH "16K")
@@ -258,5 +261,6 @@ include(stm32/l0)
 include(stm32/l1)
 include(stm32/l4)
 include(stm32/l5)
+include(stm32/mp1)
 
 

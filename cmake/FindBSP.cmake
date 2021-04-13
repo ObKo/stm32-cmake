@@ -244,7 +244,7 @@ foreach(COMP ${BSP_FIND_COMPONENTS})
     string(TOLOWER ${COMP} COMP_L)
     string(TOUPPER ${COMP} COMP_U)
     
-    string(REGEX MATCH "^STM32([A-Z][0-9])([0-9A-Z][0-9][A-Z][0-9A-Z])?_?(M[47])?.*$" COMP_U ${COMP_U})
+    string(REGEX MATCH "^STM32([A-Z]P?[0-9])([0-9A-Z][0-9][A-Z][0-9A-Z])?_?(M[47])?.*$" COMP_U ${COMP_U})
     if(NOT CMAKE_MATCH_1)
         message(FATAL_ERROR "Unknown BSP component: ${COMP}")
     endif()

@@ -1,6 +1,7 @@
 if(NOT CMSIS_FIND_COMPONENTS)
     set(CMSIS_FIND_COMPONENTS ${STM32_SUPPORTED_FAMILIES_LONG_NAME})
 endif()
+
 if(STM32H7 IN_LIST CMSIS_FIND_COMPONENTS)
     list(REMOVE_ITEM CMSIS_FIND_COMPONENTS STM32H7)
     list(APPEND CMSIS_FIND_COMPONENTS STM32H7_M7 STM32H7_M4)
@@ -45,7 +46,7 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
     string(TOLOWER ${COMP} COMP_L)
     string(TOUPPER ${COMP} COMP)
     
-    string(REGEX MATCH "^STM32([A-Z][0-9])([0-9A-Z][0-9][A-Z][0-9A-Z])?_?(M[47])?.*$" COMP ${COMP})
+    string(REGEX MATCH "^STM32([A-Z]P?[0-9])([0-9A-Z][0-9][A-Z][0-9A-Z])?_?(M[47])?.*$" COMP ${COMP})
     
     if((NOT CMAKE_MATCH_1) AND (NOT CMAKE_MATCH_2))
         message(FATAL_ERROR "Unknown CMSIS component: ${COMP}")
@@ -95,6 +96,10 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
     endif()
     list(APPEND CMSIS_INCLUDE_DIRS "${CMSIS_${FAMILY}${CORE_U}_CORE_PATH}/Include" "${CMSIS_${FAMILY}${CORE_U}_PATH}/Include")
 
+    if (${FAMILY} STREQUAL "MP1")
+       list(APPEND CMSIS_INCLUDE_DIRS "${CMSIS_${FAMILY}${CORE_U}_CORE_PATH}/Core/Include")
+    endif()
+
     if(NOT CMSIS_${FAMILY}${CORE_U}_VERSION)
         find_file(CMSIS_${FAMILY}${CORE_U}_PDSC
             NAMES ARM.CMSIS.pdsc
@@ -143,12 +148,17 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
         stm32_get_chip_type(${FAMILY} ${DEVICE} TYPE)
         string(TOLOWER ${DEVICE} DEVICE_L)
         string(TOLOWER ${TYPE} TYPE_L)
-        
+
+        if(${FAMILY} STREQUAL "MP1")
+           set(TYPE_L "${TYPE_L}x_cm4")
+         endif()
+
         find_file(CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP
             NAMES startup_stm32${TYPE_L}.s
             PATHS "${CMSIS_${FAMILY}${CORE_U}_PATH}/Source/Templates/gcc"
             NO_DEFAULT_PATH
         )
+
         list(APPEND CMSIS_SOURCES "${CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP}")
         if(NOT CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP)
             set(DEVICES_FOUND FALSE)
