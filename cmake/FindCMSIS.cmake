@@ -11,32 +11,36 @@ list(REMOVE_DUPLICATES CMSIS_FIND_COMPONENTS)
 include(stm32/devices)
 
 function(cmsis_generate_default_linker_script FAMILY DEVICE CORE)
-    if(CORE)
-        set(CORE_C "::${CORE}")
-        set(CORE_U "_${CORE}")
-    endif()
-    
-    set(OUTPUT_LD_FILE "${CMAKE_CURRENT_BINARY_DIR}/${DEVICE}${CORE_U}.ld")
-    
-    stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} FLASH SIZE FLASH_SIZE ORIGIN FLASH_ORIGIN)
-    stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} RAM SIZE RAM_SIZE ORIGIN RAM_ORIGIN)
-    stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} CCRAM SIZE CCRAM_SIZE ORIGIN CCRAM_ORIGIN)
-    stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} HEAP SIZE HEAP_SIZE)
-    stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} STACK SIZE STACK_SIZE)
-    
-    add_custom_command(OUTPUT "${OUTPUT_LD_FILE}"
-        COMMAND ${CMAKE_COMMAND} 
-            -DFLASH_ORIGIN="${FLASH_ORIGIN}" 
-            -DRAM_ORIGIN="${RAM_ORIGIN}" 
-            -DCCRAM_ORIGIN="${CCRAM_ORIGIN}" 
-            -DFLASH_SIZE="${FLASH_SIZE}" 
-            -DRAM_SIZE="${RAM_SIZE}" 
-            -DCCRAM_SIZE="${CCRAM_SIZE}" 
-            -DSTACK_SIZE="${STACK_SIZE}" 
-            -DHEAP_SIZE="${HEAP_SIZE}" 
-            -DLINKER_SCRIPT="${OUTPUT_LD_FILE}"
-            -P "${STM32_CMAKE_DIR}/stm32/linker_ld.cmake"
-    )
+    if(${FAMILY} STREQUAL "MP1")
+        set(OUTPUT_LD_FILE "stm32mp15xx_m4.ld")
+    else()
+        if(CORE)
+            set(CORE_C "::${CORE}")
+            set(CORE_U "_${CORE}")
+        endif()
+
+        set(OUTPUT_LD_FILE "${CMAKE_CURRENT_BINARY_DIR}/${DEVICE}${CORE_U}.ld")
+
+        stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} FLASH SIZE FLASH_SIZE ORIGIN FLASH_ORIGIN)
+        stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} RAM SIZE RAM_SIZE ORIGIN RAM_ORIGIN)
+        stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} CCRAM SIZE CCRAM_SIZE ORIGIN CCRAM_ORIGIN)
+        stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} HEAP SIZE HEAP_SIZE)
+        stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} STACK SIZE STACK_SIZE)
+
+        add_custom_command(OUTPUT "${OUTPUT_LD_FILE}"
+            COMMAND ${CMAKE_COMMAND}
+                -DFLASH_ORIGIN="${FLASH_ORIGIN}"
+                -DRAM_ORIGIN="${RAM_ORIGIN}"
+                -DCCRAM_ORIGIN="${CCRAM_ORIGIN}"
+                -DFLASH_SIZE="${FLASH_SIZE}"
+                -DRAM_SIZE="${RAM_SIZE}"
+                -DCCRAM_SIZE="${CCRAM_SIZE}"
+                -DSTACK_SIZE="${STACK_SIZE}"
+                -DHEAP_SIZE="${HEAP_SIZE}"
+                -DLINKER_SCRIPT="${OUTPUT_LD_FILE}"
+                -P "${STM32_CMAKE_DIR}/stm32/linker_ld.cmake"
+        )
+    endif() # MP1
     add_custom_target(CMSIS_LD_${DEVICE}${CORE_U} DEPENDS "${OUTPUT_LD_FILE}")
     add_dependencies(CMSIS::STM32::${DEVICE}${CORE_C} CMSIS_LD_${DEVICE}${CORE_U})
     stm32_add_linker_script(CMSIS::STM32::${DEVICE}${CORE_C} INTERFACE "${OUTPUT_LD_FILE}")
