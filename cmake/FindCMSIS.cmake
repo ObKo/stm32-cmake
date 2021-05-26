@@ -165,6 +165,7 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
 
         list(APPEND CMSIS_SOURCES "${CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP}")
         if(NOT CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP)
+            message(WARNING "${CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP} not found")
             set(DEVICES_FOUND FALSE)
             break()
         endif()
