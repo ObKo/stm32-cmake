@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.13)
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/stm32_gcc.cmake)
+set(STM32_CMAKE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
+set(CMAKE_TOOLCHAIN_FILE ${STM32_CMAKE_PATH}/cmake/stm32_gcc.cmake)
 
 project(stm32-freertos C ASM)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+
+# Can be used to print out all devices for the F4 family
+# include(${STM32_CMAKE_PATH}/cmake/stm32/devices.cmake)
+# stm32_print_devices_by_family(FAMILY F4)
 
 find_package(CMSIS COMPONENTS STM32F407VG REQUIRED)
 find_package(HAL COMPONENTS STM32F407VG REQUIRED)
