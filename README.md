@@ -139,7 +139,7 @@ CMSIS package will generate linker script for your device automatically (target 
 To use the following functions, include the `devices.cmake` file with the following line
 
 ```
-	include(${STM32_CMAKE_PATH}/cmake/stm32/devices.cmake)
+include(${STM32_CMAKE_PATH}/cmake/stm32/devices.cmake)
 ```
 
 where `STM32_CMAKE_PATH` is the path to the `stm32-cmake` repository.
