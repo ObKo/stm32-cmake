@@ -4,7 +4,7 @@
 
 #include <stm32h7xx_hal.h>
 
-// STM32H743ZI green led - PD12
+// STM32H743ZI blue LED
 #define LED_PORT                GPIOB
 #define LED_PIN                 GPIO_PIN_7
 #define LED_PORT_CLK_ENABLE     __HAL_RCC_GPIOB_CLK_ENABLE
