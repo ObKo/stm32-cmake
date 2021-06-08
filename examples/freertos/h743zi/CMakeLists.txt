@@ -3,7 +3,7 @@ set(TARGET_NAME stm32-freertos)
 set(STM32_CMAKE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 
 # This must come before the project call!
-set(CMAKE_TOOLCHAIN_FILE ${STM32_CMAKE_PATHT}/cmake/stm32_gcc.cmake)
+set(CMAKE_TOOLCHAIN_FILE ${STM32_CMAKE_PATH}/cmake/stm32_gcc.cmake)
 project(${TARGET_NAME} CXX C ASM)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
