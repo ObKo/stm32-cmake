@@ -42,6 +42,10 @@ find_program(CMAKE_SIZE NAMES ${STM32_TARGET_TRIPLET}-size PATHS ${TOOLCHAIN_BIN
 find_program(CMAKE_DEBUGGER NAMES ${STM32_TARGET_TRIPLET}-gdb PATHS ${TOOLCHAIN_BIN_PATH} NO_DEFAULT_PATH)
 find_program(CMAKE_CPPFILT NAMES ${STM32_TARGET_TRIPLET}-c++filt PATHS ${TOOLCHAIN_BIN_PATH} NO_DEFAULT_PATH)
 
+if (NOT CMAKE_DEBUGGER)
+    message(WARNING "Could not find ${STM32_TARGET_TRIPLET}-gdb at path ${TOOLCHAIN_BIN_PATH}")
+endif()
+
 FUNCTION(stm32_print_size_of_target TARGET)
     # this target is always considered out of date so size will always be displayed on build
     ADD_CUSTOM_TARGET(${TARGET}_size ALL COMMAND ${CMAKE_SIZE} ${TARGET}${CMAKE_EXECUTABLE_SUFFIX_C}
