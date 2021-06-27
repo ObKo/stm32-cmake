@@ -59,7 +59,7 @@ extern "C" void vApplicationMallocFailedHook(void)
     for(;;);
 }
 
-void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
+extern "C" void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
     (void) pcTaskName;
     (void) pxTask;
