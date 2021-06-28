@@ -180,7 +180,7 @@ Typical usage for a H7 device when using the M7 core with CMSIS `RTOS`:
 find_package(CMSIS COMPONENTS STM32H743ZI STM32H7_M7 RTOS REQUIRED)
 target_link_libraries(${TARGET_NAME} PRIVATE
     ...
-	FreeRTOS::ARM_CM7
+    FreeRTOS::ARM_CM7
     CMSIS::STM32::H7::M7::RTOS
 )
 ```
