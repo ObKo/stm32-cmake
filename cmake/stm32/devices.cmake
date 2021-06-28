@@ -1116,6 +1116,9 @@ set(STM32_ALL_DEVICES
     WLE5JC
 )
 
+# Store a list of devices into a given DEVICES list
+# Get list of all devices for H7 family: stm32_get_devices_by_family(DEVICES FAMILY H7)
+# Print all devices: stm32_get_devices_by_family(DEVICES)
 function(stm32_get_devices_by_family DEVICES)
     set(ARG_OPTIONS "")
     set(ARG_SINGLE FAMILY)
@@ -1125,9 +1128,15 @@ function(stm32_get_devices_by_family DEVICES)
     if(ARG_FAMILY)
         list(FILTER LIST INCLUDE REGEX "^${ARG_FAMILY}")
     endif()
+    if(NOT LIST)
+        message(WARNING "Device family ${ARG_FAMILY} unknown")
+    endif()
     set(${DEVICES} ${LIST} PARENT_SCOPE)
 endfunction()
 
+# Print the devices for a given family. Example usage:
+# Print devices for H7 family: stm32_print_devices_by_family(FAMILY H7)
+# Print all devices: stm32_print_devices_by_family()
 function(stm32_print_devices_by_family)
     set(ARG_OPTIONS "")
     set(ARG_SINGLE FAMILY)
