@@ -1144,5 +1144,6 @@ function(stm32_print_devices_by_family)
     cmake_parse_arguments(PARSE_ARGV 0 ARG "${ARG_OPTIONS}" "${ARG_SINGLE}" "${ARG_MULTIPLE}")
     stm32_get_devices_by_family(DEVICES FAMILY ${ARG_FAMILY})
     string (REPLACE ";" " " DEVICES "${DEVICES}")
-    message(STATUS ${DEVICES})
+    message(STATUS "Devices for ${ARG_FAMILY} family: ${DEVICES}")
 endfunction()
+
