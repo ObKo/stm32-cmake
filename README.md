@@ -153,7 +153,6 @@ stm32-cmake contains additional CMake modules for finding and configuring variou
 `FREERTOS_PATH` can be either the path to the whole
 [FreeRTOS/FreeRTOS](https://github.com/FreeRTOS/FreeRTOS) github repo, or the path to
 FreeRTOS-Kernel (usually located in the subfolder `FreeRTOS` on a downloaded release).
-You can supply `FREERTOS_PATH` as an environmental variable as well.
 
 Typical usage:
 
