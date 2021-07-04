@@ -8,42 +8,6 @@ if(STM32H7 IN_LIST FreeRTOS_FIND_COMPONENTS)
     list(APPEND FreeRTOS_FIND_COMPONENTS STM32H7_M7 STM32H7_M4)
 endif()
 
-set(FreeRTOS_HEAPS 1 2 3 4 5)
-
-if(NOT FREERTOS_PATH)
-    set(FREERTOS_PATH /opt/FreeRTOS CACHE PATH "Path to FreeRTOS")
-    message(STATUS "No FREERTOS_PATH specified using default: ${FREERTOS_PATH}")
-endif()
-
-find_path(FreeRTOS_COMMON_INCLUDE
-    NAMES FreeRTOS.h
-    PATHS "${FREERTOS_PATH}" "${FREERTOS_PATH}/FreeRTOS" 
-    PATH_SUFFIXES  "Source/include" "include"
-    NO_DEFAULT_PATH
-)
-
-if(NOT FreeRTOS_COMMON_INCLUDE)
-    message(WARNING "FreeRTOS common include path not found, build might fail")
-endif()
-
-list(APPEND FreeRTOS_INCLUDE_DIRS "${FreeRTOS_COMMON_INCLUDE}")
-
-find_path(FreeRTOS_SOURCE_DIR
-    NAMES tasks.c
-    PATHS "${FREERTOS_PATH}" "${FREERTOS_PATH}/FreeRTOS" 
-    PATH_SUFFIXES  "Source"
-    NO_DEFAULT_PATH
-)
-if(NOT (TARGET FreeRTOS))
-    add_library(FreeRTOS INTERFACE IMPORTED)
-    target_sources(FreeRTOS INTERFACE 
-        "${FreeRTOS_SOURCE_DIR}/tasks.c"
-        "${FreeRTOS_SOURCE_DIR}/list.c"
-        "${FreeRTOS_SOURCE_DIR}/queue.c"
-    )
-    target_include_directories(FreeRTOS INTERFACE "${FreeRTOS_COMMON_INCLUDE}")
-endif()
-
 foreach(COMP ${FreeRTOS_FIND_COMPONENTS})
     string(TOUPPER ${COMP} COMP)
     string(REGEX MATCH "^STM32([A-Z][0-9])([0-9A-Z][0-9][A-Z][0-9A-Z])?_?(M[47])?.*$" FAMILY_COMP ${COMP})
@@ -69,35 +33,20 @@ macro(stm32_find_freertos FreeRTOS_NAMESPACE FREERTOS_PATH)
     find_path(FreeRTOS_COMMON_INCLUDE
         NAMES FreeRTOS.h
         PATHS "${FREERTOS_PATH}" "${FREERTOS_PATH}/FreeRTOS" 
-<<<<<<< HEAD
-        PATH_SUFFIXES
-            "portable/GCC/${PORT}/r0p1"
-            "portable/GCC/${PORT}"
-            "Source/portable/GCC/${PORT}"
-            "Source/portable/GCC/${PORT}/r0p1"
+        PATH_SUFFIXES  "Source/include" "include"
         NO_DEFAULT_PATH
     )
 
-    if(NOT FreeRTOS_${PORT}_PATH)
-        message(WARNING "FreeRTOS port path not found, build might fail")
+    if(NOT FreeRTOS_COMMON_INCLUDE)
+        message(WARNING "FreeRTOS common include path not found, build might fail")
     endif()
 
-    list(APPEND FreeRTOS_INCLUDE_DIRS "${FreeRTOS_${PORT}_PATH}")
-    
-    find_file(FreeRTOS_${PORT}_SOURCE
-        NAMES port.c
-        PATHS "${FreeRTOS_${PORT}_PATH}"
-=======
-        PATH_SUFFIXES  "Source/include"
-        NO_DEFAULT_PATH
-    )
     list(APPEND FreeRTOS_INCLUDE_DIRS "${FreeRTOS_COMMON_INCLUDE}")
 
     find_path(FreeRTOS_SOURCE_DIR
         NAMES tasks.c
         PATHS "${FREERTOS_PATH}" "${FREERTOS_PATH}/FreeRTOS" 
         PATH_SUFFIXES  "Source"
->>>>>>> garjones/add_support_for_freertos_from_stm32cube
         NO_DEFAULT_PATH
     )
     if(NOT (TARGET FreeRTOS))
@@ -146,9 +95,18 @@ macro(stm32_find_freertos FreeRTOS_NAMESPACE FREERTOS_PATH)
         find_path(FreeRTOS_${PORT}_PATH
             NAMES portmacro.h
             PATHS "${FREERTOS_PATH}" "${FREERTOS_PATH}/FreeRTOS" 
-            PATH_SUFFIXES "Source/portable/GCC/${PORT}"  "Source/portable/GCC/${PORT}/r0p1"
+            PATH_SUFFIXES
+                "portable/GCC/${PORT}/r0p1"
+                "portable/GCC/${PORT}"
+                "Source/portable/GCC/${PORT}"
+                "Source/portable/GCC/${PORT}/r0p1"
             NO_DEFAULT_PATH
         )
+
+        if(NOT FreeRTOS_${PORT}_PATH)
+            message(WARNING "FreeRTOS port path not found, build might fail")
+        endif()
+
         list(APPEND FreeRTOS_INCLUDE_DIRS "${FreeRTOS_${PORT}_PATH}")
         
         find_file(FreeRTOS_${PORT}_SOURCE
@@ -174,15 +132,16 @@ macro(stm32_find_freertos FreeRTOS_NAMESPACE FREERTOS_PATH)
     endforeach()
 endmacro()
 
+message(STATUS "Search for FreeRTOS ports: ${FreeRTOS_FIND_COMPONENTS_PORTS}")
+
 if(NOT FreeRTOS_FIND_COMPONENTS_FAMILIES)
     if(NOT FREERTOS_PATH)
         set(FREERTOS_PATH /opt/FreeRTOS CACHE PATH "Path to FreeRTOS")
-        message(STATUS "No FREERTOS_PATH specified using default: ${FREERTOS_PATH}")
+        message(STATUS "No FREERTOS_PATH specified, using default: ${FREERTOS_PATH}")
     endif()
     stm32_find_freertos(FreeRTOS ${FREERTOS_PATH})
 else()
     message(STATUS "Search for FreeRTOS families: ${FreeRTOS_FIND_COMPONENTS_FAMILIES}")
-    message(STATUS "Search for FreeRTOS ports: ${FreeRTOS_FIND_COMPONENTS_PORTS}")
 
     foreach(COMP ${FreeRTOS_FIND_COMPONENTS_FAMILIES})
         string(TOLOWER ${COMP} COMP_L)
