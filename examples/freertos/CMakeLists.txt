@@ -20,8 +20,16 @@ set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 # stm32_print_devices_by_family(FAMILY H7)
 # stm32_print_devices_by_family(FAMILY F4)
 
-option(FREERTOS_F407VG_EXAMPLE "Compile FreeRTOS example for the F407VG board" ON)
+set(SUPPORTED_BOARDS F407VG H743ZI)
+option(FREERTOS_F407VG_EXAMPLE "Compile FreeRTOS example for the F407VG board" OFF)
 option(FREERTOS_H743ZI_EXAMPLE "Compile FreeRTOS example for the H743ZI board" OFF)
+
+if(NOT FREERTOS_F407VG_EXAMPLE AND NOT FREERTOS_H743ZI_EXAMPLE)
+    message(FATAL_ERROR
+        "Please select at least one target to compile by passing FREERTOS_<BOARD>_EXAMPLE=ON\n"
+		"Supported boards: ${SUPPORTED_BOARDS}"
+    )
+endif()
 
 set(HAL_COMP_LIST RCC GPIO CORTEX)
 set(CMSIS_COMP_LIST "")
