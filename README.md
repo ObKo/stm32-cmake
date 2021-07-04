@@ -222,4 +222,3 @@ Other FreeRTOS libraries, with `FREERTOS_NAMESPACE` being set as specified in th
 * `${FREERTOS_NAMESPACE}::StreamBuffer` - stream buffer (`stream_buffer.c`)
 * `${FREERTOS_NAMESPACE}::Timers` - timers (`timers.c`)
 * `${FREERTOS_NAMESPACE}::Heap::<N>` - heap implementation (`heap_<N>.c`), `<N>`: [1-5]
-
