@@ -176,8 +176,19 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 )
 ```
 
+Typical usage for a F4 device, using an external kernel without CMSIS support.
+The FreeRTOS namespace is set to `FreeRTOS` and the `ARM_CM4F` port is used:
+
+```cmake
+find_package(FreeRTOS COMPONENTS ARM_CM4F REQUIRED)
+target_link_libraries(${TARGET_NAME} PRIVATE
+    ...
+    FreeRTOS::ARM_CM4F
+)
+```
+
 Another typical usage using the FreeRTOS provided in the Cube repository and the CMSIS support.
-Tge FreeRTOS namespace is set to `FreeRTOS::STM32::<FAMILY>`:
+The FreeRTOS namespace is set to `FreeRTOS::STM32::<FAMILY>` and the `ARM_CM7` port is used:
 
 ```cmake
 find_package(CMSIS COMPONENTS STM32H743ZI STM32H7_M7 RTOS REQUIRED)
@@ -201,16 +212,6 @@ in the Cube repository
 
 For the multi-core architectures, you have to specify both family and core like specified in the
 example above.
-
-Typical usage:
-
-```cmake
-find_package(FreeRTOS COMPONENTS ARM_CM4F REQUIRED)
-target_link_libraries(${TARGET_NAME} PRIVATE
-    ...
-    FreeRTOS::ARM_CM4F
-)
-```
 
 The following FreeRTOS ports are supported in general: `ARM_CM0`, `ARM_CM3`, `ARM_CM4F`, `ARM_CM7`.
 
