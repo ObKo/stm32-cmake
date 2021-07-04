@@ -27,7 +27,7 @@ option(FREERTOS_H743ZI_EXAMPLE "Compile FreeRTOS example for the H743ZI board" O
 if(NOT FREERTOS_F407VG_EXAMPLE AND NOT FREERTOS_H743ZI_EXAMPLE)
     message(FATAL_ERROR
         "Please select at least one target to compile by passing FREERTOS_<BOARD>_EXAMPLE=ON\n"
-		"Supported boards: ${SUPPORTED_BOARDS}"
+        "Supported boards: ${SUPPORTED_BOARDS}"
     )
 endif()
 
