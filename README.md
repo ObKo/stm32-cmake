@@ -33,6 +33,10 @@ It uses cmake and GCC, along with newlib (libc), STM32Cube. Supports F0 F1 F2 F3
 It will compile a project for the `F4` family by default, but you can also compile for the
 `L0` and `F1` family by passing `L0_EXAMPLE=ON` or `F1_EXAMPLE=ON` to the CMake generation call.
 * `freertos` ([examples/freertos](examples/freertos)) - blink led using STM32 HAL library and FreeRTOS.
+   You need to specify at least one board by passing `FREERTOS_<BOARD>_EXAMPLE=ON` to CMake.
+   Currently, the example can be built for the `H743ZI` and `F407VG` board targets. 
+   You can opt to use the FreeRTOS CMSIS implementation provided by the Cube repository by supplying
+   `USE_CMSIS_RTOS=ON` or `USE_CMSIS_RTOS_V2` to CMake.
 
 # Usage
 
