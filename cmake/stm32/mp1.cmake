@@ -28,3 +28,7 @@ target_compile_options(STM32::MP1 INTERFACE
 target_link_options(STM32::MP1 INTERFACE
     -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 )
+target_compile_definitions(STM32::MP1 INTERFACE
+    -DCORE_CM4 -DSTM32MP157Axx
+)
+
