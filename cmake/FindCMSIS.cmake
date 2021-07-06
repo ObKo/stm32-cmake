@@ -171,6 +171,7 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
         endif()
         
         if(NOT (TARGET CMSIS::STM32::${TYPE}${CORE_C}))
+           message("Creating the target CMSIS::STM32::${TYPE}${CORE_C}")
             add_library(CMSIS::STM32::${TYPE}${CORE_C} INTERFACE IMPORTED)
             target_link_libraries(CMSIS::STM32::${TYPE}${CORE_C} INTERFACE CMSIS::STM32::${FAMILY}${CORE_C} STM32::${TYPE}${CORE_C} ${CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP})
             target_sources(CMSIS::STM32::${TYPE}${CORE_C} INTERFACE "${CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP}")
@@ -178,6 +179,7 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
         
         add_library(CMSIS::STM32::${DEVICE}${CORE_C} INTERFACE IMPORTED)
         target_link_libraries(CMSIS::STM32::${DEVICE}${CORE_C} INTERFACE CMSIS::STM32::${TYPE}${CORE_C})
+        message("Creating the target CMSIS::STM32::${DEVICE}${CORE_C}")
         cmsis_generate_default_linker_script(${FAMILY} ${DEVICE} "${CORE}")
     endforeach()
 

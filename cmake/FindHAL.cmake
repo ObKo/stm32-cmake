@@ -331,6 +331,7 @@ foreach(COMP ${HAL_FIND_COMPONENTS_FAMILIES})
             add_library(HAL::STM32::${FAMILY}${CORE_C}::${DRV} INTERFACE IMPORTED)
             target_link_libraries(HAL::STM32::${FAMILY}${CORE_C}::${DRV} INTERFACE HAL::STM32::${FAMILY}${CORE_C})
             target_sources(HAL::STM32::${FAMILY}${CORE_C}::${DRV} INTERFACE "${HAL_${FAMILY}${CORE_U}_${DRV}_SOURCE}")
+            message(STATUS "Adding HAL driver: HAL::STM32::${FAMILY}${CORE_C}::${DRV}")
         endif()
                 
         if(HAL_${FAMILY}${CORE_U}_${DRV}_SOURCE AND (${DRV_L} IN_LIST HAL_EX_DRIVERS_${FAMILY}))
