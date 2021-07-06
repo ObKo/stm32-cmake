@@ -9,10 +9,11 @@ endif()
 list(REMOVE_DUPLICATES CMSIS_FIND_COMPONENTS)
 
 include(stm32/devices)
+set(_THIS_MODULE_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 function(cmsis_generate_default_linker_script FAMILY DEVICE CORE)
     if(${FAMILY} STREQUAL "MP1")
-        set(OUTPUT_LD_FILE "stm32mp15xx_m4.ld")
+        set(OUTPUT_LD_FILE "${_THIS_MODULE_BASE_DIR}/stm32/stm32mp15xx_m4.ld")
     else()
         if(CORE)
             set(CORE_C "::${CORE}")
