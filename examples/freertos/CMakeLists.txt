@@ -3,7 +3,8 @@ set(PROJ_NAME stm32-freertos)
 set(STM32_CMAKE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 
 # Please note: When using CMSIS, it is recommended to use the FreeRTOS version supplied in the 
-# Cube repository because more recent kernels might be incompatible
+# Cube repository because more recent kernels might be incompatible to the CMSIS
+# implementation provided by STM
 option(USE_CMSIS_RTOS "Use CMSIS RTOS provided by Cube repository" OFF)
 option(USE_CMSIS_RTOS_V2 "Use CMSIS RTOS_V2 provided by Cube repository" OFF)
 if(USE_CMSIS_RTOS AND USE_CMSIS_RTOS_V2)
