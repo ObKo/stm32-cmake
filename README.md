@@ -30,18 +30,58 @@ It uses cmake and GCC, along with newlib (libc), STM32Cube. Supports F0 F1 F2 F3
 * `fetch-cube` ([examples/fetch-cube](examples/fetch-cube)) - example of using FetchContent for fetching STM32Cube from ST's git.
 * `fetch-cmsis-hal` ([examples/fetch-cmsis-hal](examples/fetch-cmsis-hal)) - example of using FetchContent for fetching STM32 CMSIS and HAL from ST's git.
 * `blinky` ([examples/blinky](examples/blinky)) - blink led using STM32 HAL library and SysTick.
+It will compile a project for the `F4` family by default, but you can also compile for the
+`L0` and `F1` family by passing `L0_EXAMPLE=ON` or `F1_EXAMPLE=ON` to the CMake generation call.
 * `freertos` ([examples/freertos](examples/freertos)) - blink led using STM32 HAL library and FreeRTOS.
 
 # Usage
 
-First of all you need to configure toolchain and library paths using CMake variables. 
-You can do this by passing values through command line during cmake run or by setting variables inside your `CMakeLists.txt`
+First of all you need to configure toolchain and library paths using CMake variables. There are
+generally three ways to do this:
+
+1. Pass the variables through command line during cmake run with passed to CMake with 
+   `-D<VAR_NAME>=...`
+2. Set the variables inside your `CMakeLists.txt`
+3. Pass these variables to CMake by setting them as environmental variables. 
+
+The most important set of variables which needs to be set can be found in the following section.
 
 ## Configuration
 
+These configuration options need to be set for the build process to work properly:
+
 * `STM32_TOOLCHAIN_PATH` - where toolchain is located, **default**: `/usr`
+* `STM32_CUBE_<FAMILY>_PATH` - path to STM32Cube directory, where `<FAMILY>` is one
+   of `F0 G0 L0 F1 L1 F2 F3 F4 G4 L4 F7 H7` **default**: `/opt/STM32Cube<FAMILY>`
+
+These configuration variables are optional:
+
 * `TARGET_TRIPLET` - toolchain target triplet, **default**: `arm-none-eabi`
-* `STM32_CUBE_<FAMILY>_PATH` - path to STM32Cube directory, where `<FAMILY>` is one of `F0 G0 L0 F1 L1 F2 F3 F4 G4 L4 F7 H7` **default**: `/opt/STM32Cube<FAMILY>`
+* `FREERTOS_PATH` - Path to the FreeRTOS kernel when compiling with a RTOS. Does not need to be
+   specified when using CMSIS
+
+### Helper script on Unix shells
+
+If you have access to a Unix shell, which is the default terminal on Linux, or tools like
+`MinGW64` or `git bash` on Windows, you can write a small `path_helper.sh` script like this:
+
+```sh
+export STM32_TOOLCHAIN_PATH="<ToolchainPath>"
+export TARGET_TRIPLET=arm-none-eabi
+export STM32_CUBE_<FAMILY>_PATH="<PathToCubeRoot>"
+```
+
+and then use `. path_helper.sh` to set up the environment for the local terminal instance in one go.
+
+### Helper script in Powershell
+
+On Windows, you can use a Powershell script `path_helper.ps1`to set up the environment:
+
+```sh
+$env:STM32_TOOLCHAIN_PATH = "<ToolchainPath>"
+$env:TARGET_TRIPLET = arm-none-eabi
+$env:STM32_CUBE_<FAMILY>_PATH="<PathToCubeRoot>"
+```
 
 ## Common usage
 
@@ -80,12 +120,21 @@ CMSIS creates the following targets:
 
 So, if you don't need linker script, you can link only `CMSIS::STM32::<TYPE>` library and provide your own script using `stm32_add_linker_script` function
 
-***Note**: For H7 family, because of it's multi-core architecture, all H7 targets also have a suffix (::M7 or ::M4).
-For example, targets created for STM32H747BI will look like `CMSIS::STM32::H7::M7`, `CMSIS::STM32::H7::M4`, `CMSIS::STM32::H747BI::M7`, `CMSIS::STM32::H747BI::M4`, etc.*
+***Note**: For H7 family, because of it multi-cores architecture, all H7 targets also have a suffix (::M7 or ::M4).
+For example, targets created for STM32H747BI will look like `CMSIS::STM32::H7::M7`,
+`CMSIS::STM32::H7::M4`, `CMSIS::STM32::H747BI::M7`, `CMSIS::STM32::H747BI::M4`, etc.*
 
-The GCC C/C++ standard libraries are added by linking the library `STM32::NoSys`. This will add the `--specs=nosys.specs` to compiler and linker flags.
-If you want to use C++ on MCUs with little flash, you might instead want to link the newlib-nano to reduce the code size. You can do so by linking `STM32::Nano`, which will add the `--specs=nano.specs` flags to both compiler and linker.
-Keep in mind that when using `STM32::Nano`, by default you cannot use floats in printf/scanf calls, and you have to provide implementations for several OS interfacing functions (_sbrk, _close, _fstat, and others).
+The GCC C/C++ standard libraries are added by linking the library `STM32::NoSys`. This will add
+the `--specs=nosys.specs` to compiler and linker flags.
+If you want to use C++ on MCUs with little flash, you might instead want to link the newlib-nano to
+reduce the code size. You can do so by linking `STM32::Nano`, which will add the
+`--specs=nano.specs` flags to both compiler and linker.
+Keep in mind that when using `STM32::Nano`, by default you cannot use floats in printf/scanf calls,
+and you have to provide implementations for several OS interfacing
+functions (`_sbrk`, `_close`, `_fstat`, and others). You can enable printf/scanf floating point support with
+newlib-nano by linking against `STM32::Nano::FloatPrint` and/or `STM32::Nano::FloatScan`.
+It is also possible to combine `STM32::Nano` and `STM32::NoSys`
+to have the benefits of reduced code size while not being forced to implement system calls.
 
 ## HAL
 
@@ -154,9 +203,14 @@ where `STM32_CMAKE_PATH` is the path to the `stm32-cmake` repository.
 
 stm32-cmake contains additional CMake modules for finding and configuring various libraries and RTOSes used in the embedded world.
 
-## FreeRTOS
+## <a id="freertos"></a> FreeRTOS
 
-[cmake/FindFreeRTOS](cmake/FindFreeRTOS) - finds FreeRTOS sources in location specified by `FREERTOS_PATH` (*default*: `/opt/FreeRTOS`) variable and format them as `IMPORTED` targets. `FREERTOS_PATH` can be either the path to the whole [FreeRTOS/FreeRTOS](https://github.com/FreeRTOS/FreeRTOS) github repo, or the path to FreeRTOS-Kernel (usually located in the subfolder `FreeRTOS` on a downloaded release)
+[cmake/FindFreeRTOS](cmake/FindFreeRTOS.cmake) - finds FreeRTOS sources in location specified by
+`FREERTOS_PATH` (*default*: `/opt/FreeRTOS`) variable and format them as `IMPORTED` targets.
+`FREERTOS_PATH` can be either the path to the whole
+[FreeRTOS/FreeRTOS](https://github.com/FreeRTOS/FreeRTOS) github repo, or the path to
+FreeRTOS-Kernel (usually located in the subfolder `FreeRTOS` on a downloaded release).
+You can supply `FREERTOS_PATH` as an environmental variable as well.
 
 Typical usage:
 
@@ -174,4 +228,3 @@ Other FreeRTOS libraries:
 * `FreeRTOS::StreamBuffer` - stream buffer (`stream_buffer.c`)
 * `FreeRTOS::Timers` - timers (`timers.c`)
 * `FreeRTOS::Heap::<N>` - heap implementation (`heap_<N>.c`), `<N>`: [1-5]
-
