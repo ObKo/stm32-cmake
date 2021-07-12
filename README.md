@@ -267,7 +267,7 @@ For the multi-core architectures, you have to specify both family and core like 
 example above.
 
 The following FreeRTOS ports are supported in general: `ARM_CM0`, `ARM_CM3`, `ARM_CM4F`, `ARM_CM7`,
-`ARM_CM3_MPU`, `ARM_CM4_MPU`.
+`ARM_CM3_MPU`, `ARM_CM4_MPU`, `ARM_CM7_MPU`.
 
 Other FreeRTOS libraries, with `FREERTOS_NAMESPACE` being set as specified in the examples above:
 
