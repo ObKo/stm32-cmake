@@ -13,7 +13,7 @@ function(stm32_util_create_family_targets FAMILY)
 
     if(NOT (TARGET STM32::${FAMILY}${CORE_C}))
         set(STM32_COMPILE_OPTIONS
-            -mthumb -mabi=aapcs -Wall -ffunction-sections -fdata-sections
+            -mthumb -Wall -ffunction-sections -fdata-sections
         )
         if(STM32_ENABLE_FAST_MATH)
             list(APPEND STM32_COMPILE_OPTIONS -ffast-math)
