@@ -11,10 +11,6 @@ function(stm32_util_create_family_targets FAMILY)
         message(FATAL_ERROR "Expected at most one core for family ${FAMILY}: ${CORES}")
     endif()
 
-    option(STM32_ENABLE_FAST_MATH "Add -ffast-math compiler flag" OFF)
-    option(STM32_NO_BUILTIN "Add -fno-builtin compiler flag" OFF)
-    option(STM32_NO_STRICT_ALIASING "Add -fno-strict-aliasing compiler flag" OFF)
-
     if(NOT (TARGET STM32::${FAMILY}${CORE_C}))
         set(STM32_COMPILE_OPTIONS
             -mthumb -mabi=aapcs -Wall -ffunction-sections -fdata-sections
@@ -164,4 +160,3 @@ function(stm32_fetch_hal)
         set(STM32_HAL_${FAMILY}_PATH ${${HAL_NAME_L}_SOURCE_DIR} PARENT_SCOPE)
     endforeach()
 endfunction()
-
