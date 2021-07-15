@@ -16,7 +16,7 @@ if(NOT FREERTOS_PATH)
     else()
         message(STATUS
             "No FreeRTOS folder found at default location ${DEFAULT_FREERTOS_PATH}. "
-            "Leaving empty
+            "Leaving empty"
         )
     endif()
 endif()
