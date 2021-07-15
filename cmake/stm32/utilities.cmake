@@ -14,7 +14,7 @@ function(stm32_util_create_family_targets FAMILY)
     if(NOT (TARGET STM32::${FAMILY}${CORE_C}))
         add_library(STM32::${FAMILY}${CORE_C} INTERFACE IMPORTED)
         # Set compiler flags for target
-        # -Wall: all warning activated
+        # -Wall: all warnings activated
         # -ffunction-sections -fdata-sections: remove unused code
         target_compile_options(STM32::${FAMILY}${CORE_C} INTERFACE 
             --sysroot="${TOOLCHAIN_SYSROOT}"
