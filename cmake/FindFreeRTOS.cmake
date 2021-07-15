@@ -9,8 +9,9 @@ if(NOT FREERTOS_PATH)
 endif()
 
 if(NOT FREERTOS_PATH)
-    set(FREERTOS_PATH /opt/FreeRTOS CACHE PATH "Path to FreeRTOS")
-    message(STATUS "No FREERTOS_PATH specified using default: ${FREERTOS_PATH}")
+    set(DEFAULT_FREERTOS_PATH "/opt/FreeRTOS")
+    set(FREERTOS_PATH ${DEFAULT_FREERTOS_PATH} CACHE PATH "Path to FreeRTOS")
+    message(STATUS "No FREERTOS_PATH specified using default: ${DEFAULT_FREERTOS_PATH}")
 endif()
 
 if(STM32H7 IN_LIST FreeRTOS_FIND_COMPONENTS)

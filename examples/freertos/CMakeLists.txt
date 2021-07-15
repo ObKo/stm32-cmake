@@ -9,7 +9,7 @@ option(USE_CMSIS_RTOS "Use CMSIS RTOS provided by Cube repository" OFF)
 option(USE_CMSIS_RTOS_V2 "Use CMSIS RTOS_V2 provided by Cube repository" OFF)
 option(USE_CUBE_FREERTOS "Use the FreeRTOS kernel provided by the Cube repository" ON)
 
-if(USE_CUBE_RTOS)
+if(USE_CUBE_FREERTOS)
     message(STATUS "Using FreeRTOS provided by Cube repository")
 else()
     message(STATUS "Using FreeRTOS from kernel repository")
