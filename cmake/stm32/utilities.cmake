@@ -12,15 +12,11 @@ function(stm32_util_create_family_targets FAMILY)
     endif()
 
     if(NOT (TARGET STM32::${FAMILY}${CORE_C}))
-        # Remove unused code, generate thumb code and enable all warnings
-        set(STM32_COMPILE_OPTIONS
-            -mthumb -Wall -ffunction-sections -fdata-sections
-        )
-
         add_library(STM32::${FAMILY}${CORE_C} INTERFACE IMPORTED)
+        # Remove unused code, generate thumb code and enable all warnings
         target_compile_options(STM32::${FAMILY}${CORE_C} INTERFACE 
             --sysroot="${TOOLCHAIN_SYSROOT}"
-            ${STM32_COMPILE_OPTIONS}
+            -mthumb -Wall -ffunction-sections -fdata-sections
         )
         # Remove unused code, generate thumb code
         target_link_options(STM32::${FAMILY}${CORE_C} INTERFACE 
