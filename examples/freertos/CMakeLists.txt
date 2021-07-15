@@ -9,8 +9,20 @@ option(USE_CMSIS_RTOS "Use CMSIS RTOS provided by Cube repository" OFF)
 option(USE_CMSIS_RTOS_V2 "Use CMSIS RTOS_V2 provided by Cube repository" OFF)
 option(USE_CUBE_FREERTOS "Use the FreeRTOS kernel provided by the Cube repository" ON)
 
+if(USE_CUBE_RTOS)
+    message(STATUS "Using FreeRTOS provided by Cube repository")
+else()
+    message(STATUS "Using FreeRTOS from kernel repository")
+endif()
+
 if(USE_CMSIS_RTOS AND USE_CMSIS_RTOS_V2)
     message(FATAL_ERROR "Can not use USE_CMSIS_RTOS_V2 together with USE_CMSIS_RTOS!")
+endif()
+
+if(USE_CMSIS_RTOS)
+    message(STATUS "Compiling CMSIS RTOS support")
+elseif(USE_CMSIS_RTOS_V2)
+    message(STATUS "Compiling CMSIS RTOS V2 support")
 endif()
 
 # This must come before the project call!
