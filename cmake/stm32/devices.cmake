@@ -1118,7 +1118,7 @@ set(STM32_ALL_DEVICES
 
 # Store a list of devices into a given DEVICES list
 # Get list of all devices for H7 family: stm32_get_devices_by_family(DEVICES FAMILY H7)
-# Print all devices: stm32_get_devices_by_family(DEVICES)
+# Get a list of all devices: stm32_get_devices_by_family(DEVICES)
 function(stm32_get_devices_by_family DEVICES)
     set(ARG_OPTIONS "")
     set(ARG_SINGLE FAMILY)
@@ -1146,4 +1146,3 @@ function(stm32_print_devices_by_family)
     string (REPLACE ";" " " DEVICES "${DEVICES}")
     message(STATUS "Devices for ${ARG_FAMILY} family: ${DEVICES}")
 endfunction()
-
