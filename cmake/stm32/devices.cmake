@@ -1123,7 +1123,7 @@ set(STM32_ALL_DEVICES
 function(stm32_get_devices_by_family STM_DEVICES)
     # Specify keywords for argument parsing here
     set(ARG_OPTIONS "")
-    set(ARG_SINGLE CORE)
+    set(ARG_SINGLE "")
     set(ARG_MULTIPLE FAMILY)
 
     if(ARGC GREATER_EQUAL 1)

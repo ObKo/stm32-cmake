@@ -56,7 +56,7 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
         set(STM_DEVICES "${CMAKE_MATCH_1}${CMAKE_MATCH_2}")
     else()
         set(FAMILY ${CMAKE_MATCH_1})
-        stm32_get_devices_by_family(STM_DEVICES FAMILY ${FAMILY} CORE ${CORE})
+        stm32_get_devices_by_family(STM_DEVICES FAMILY ${FAMILY})
     endif()
     
     if(CMAKE_MATCH_3)
