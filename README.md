@@ -188,20 +188,12 @@ CMSIS package will generate linker script for your device automatically (target 
 * `stm32_generate_binary_file(<target>)` - Generate the binary file for the given target
 * `stm32_generate_hex_file(<target>)` - Generate the hex file for the given target
 
-To use the following functions, include the `devices.cmake` file with the following line
-
-```cmake
-include(${STM32_CMAKE_PATH}/cmake/stm32/devices.cmake)
-```
-
-where `STM32_CMAKE_PATH` is the path to the `stm32-cmake` repository.
+In the following functions, you can also specify mutiple families.
 
 * `stm32_get_devices_by_family(STM_DEVICES [FAMILY <family>])` - return into `STM_DEVICES` all
   supported devices by family (or all devices if `<family>` is empty)
 * `stm32_print_devices_by_family([FAMILY <family>])` - Print all supported devices by family
   (or all devices if `<family>` is empty)
-
-You can also specify mutiple families.
 
 # Additional CMake modules
 
