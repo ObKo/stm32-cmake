@@ -196,8 +196,12 @@ include(${STM32_CMAKE_PATH}/cmake/stm32/devices.cmake)
 
 where `STM32_CMAKE_PATH` is the path to the `stm32-cmake` repository.
 
-* `stm32_get_devices_by_family(DEVICES [FAMILY <family>])` - return into `DEVICES` all supported devices by family (or all devices if `<family>` is empty)
-* `stm32_print_devices_by_family([FAMILY <family>])` - Print all supported devices by family (or all devices if `<family>` is empty)
+* `stm32_get_devices_by_family(STM_DEVICES [FAMILY <family>])` - return into `STM_DEVICES` all
+  supported devices by family (or all devices if `<family>` is empty)
+* `stm32_print_devices_by_family([FAMILY <family>])` - Print all supported devices by family
+  (or all devices if `<family>` is empty)
+
+You can also specify mutiple families.
 
 # Additional CMake modules
 
