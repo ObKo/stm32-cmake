@@ -16,6 +16,10 @@ if(NOT FREERTOS_PATH)
     message(STATUS "No FREERTOS_PATH specified using default: ${FREERTOS_PATH}")
 endif()
 
+if (NOT EXISTS ${FREERTOS_PATH})
+    message(FATAL_ERROR "FREERTOS_PATH: '${FREERTOS_PATH}' Does not Exist")
+endif()
+
 find_path(FreeRTOS_COMMON_INCLUDE
     NAMES FreeRTOS.h
     PATHS "${FREERTOS_PATH}" "${FREERTOS_PATH}/FreeRTOS" 

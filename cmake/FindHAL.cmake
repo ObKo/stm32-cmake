@@ -246,6 +246,10 @@ foreach(COMP ${HAL_FIND_COMPONENTS_FAMILIES})
         message(STATUS "Neither STM32_CUBE_${FAMILY}_PATH nor STM32_HAL_${FAMILY}_PATH specified using default STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
     endif()
 
+    if ((NOT EXISTS ${STM32_HAL_${FAMILY}_PATH}) AND (NOT EXISTS ${STM32_CUBE_${FAMILY}_PATH}))
+        message(FATAL_ERROR "Neither STM32_CUBE_${FAMILY}_PATH: '${STM32_CUBE_${FAMILY}_PATH}' nor STM32_HAL_${FAMILY}_PATH: '${STM32_HAL_${FAMILY}_PATH}' Exists.")
+    endif()
+
     #Checking HAL patch or release version
     unset(VERSION_INFO)
     find_file(PACKAGE_FILE NAMES package.xml PATHS ${STM32_CUBE_${FAMILY}_PATH})

@@ -270,7 +270,11 @@ foreach(COMP ${BSP_FIND_COMPONENTS})
         set(STM32_CUBE_${FAMILY}_PATH /opt/STM32Cube${FAMILY} CACHE PATH "Path to STM32Cube${FAMILY}")
         message(STATUS "No STM32_CUBE_${FAMILY}_PATH specified using default: ${STM32_CUBE_${FAMILY}_PATH}")
     endif()
-        
+
+    if (NOT EXISTS ${STM32_CUBE_${FAMILY}_PATH})
+        message(FATAL_ERROR "STM32_CUBE_${FAMILY}_PATH: '${STM32_CUBE_${FAMILY}_PATH}' Does not Exist")
+    endif()
+
     find_path(BSP_${FAMILY}_PATH
         NAMES Components/Common/io.h
         PATHS "${STM32_CUBE_${FAMILY}_PATH}/Drivers/BSP"

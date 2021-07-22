@@ -79,6 +79,10 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
         set(STM32_CUBE_${FAMILY}_PATH /opt/STM32Cube${FAMILY} CACHE PATH "Path to STM32Cube${FAMILY}")
         message(STATUS "Neither STM32_CUBE_${FAMILY}_PATH nor STM32_CMSIS_${FAMILY}_PATH specified using default  STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
     endif()
+
+    if ((NOT EXISTS ${STM32_CMSIS_${FAMILY}_PATH}) AND (NOT EXISTS ${STM32_CUBE_${FAMILY}_PATH}))
+        message(FATAL_ERROR "Neither STM32_CUBE_${FAMILY}_PATH: '${STM32_CUBE_${FAMILY}_PATH}' nor STM32_CMSIS_${FAMILY}_PATH: '${STM32_CMSIS_${FAMILY}_PATH}' Exists")
+    endif()
         
     find_path(CMSIS_${FAMILY}${CORE_U}_CORE_PATH
         NAMES Include/cmsis_gcc.h
