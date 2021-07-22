@@ -4,6 +4,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/stm32_gcc.cmake
 if(NOT TEST_FAMILIES)
     # Can't test H7 because it needs some non-free components
     set(TEST_FAMILIES F0 F1 F2 F3 F4 F7 G0 G4 L0 L1 L4)
+    message(STATUS "No Test Families, running with TEST_FAMILIES=[${TEST_FAMILIES}]")
 endif()
 
 # Nucleo boards can have different devices on it
@@ -41,9 +42,12 @@ if(FETCH_ST_SOURCES)
     stm32_fetch_cube(${TEST_FAMILIES})
 endif()
 
-find_package(CMSIS REQUIRED)
-find_package(HAL REQUIRED)
-find_package(BSP REQUIRED)
+set(COMP_LIST ${TEST_FAMILIES})
+list(TRANSFORM COMP_LIST PREPEND STM32)
+
+find_package(CMSIS COMPONENTS ${COMP_LIST} REQUIRED)
+find_package(HAL COMPONENTS ${COMP_LIST} REQUIRED)
+find_package(BSP COMPONENTS ${COMP_LIST} REQUIRED)
 
 set(SOURCES main.c)
 
