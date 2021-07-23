@@ -271,8 +271,8 @@ foreach(COMP ${BSP_FIND_COMPONENTS})
         message(STATUS "No STM32_CUBE_${FAMILY}_PATH specified using default: ${STM32_CUBE_${FAMILY}_PATH}")
     endif()
 
-    if (NOT EXISTS ${STM32_CUBE_${FAMILY}_PATH})
-        message(FATAL_ERROR "STM32_CUBE_${FAMILY}_PATH: '${STM32_CUBE_${FAMILY}_PATH}' Does not Exist")
+    if ((${BSP_FIND_REQUIRED_${COMP}}) AND (NOT EXISTS ${STM32_CUBE_${FAMILY}_PATH}_)
+        message(FATAL_ERROR "For REQUIRED COMPONENT: ${COMP}, STM32_CUBE_${FAMILY}_PATH: '${STM32_CUBE_${FAMILY}_PATH}' Does not Exist")
     endif()
 
     find_path(BSP_${FAMILY}_PATH
