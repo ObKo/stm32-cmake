@@ -17,7 +17,7 @@ if(NOT FREERTOS_PATH)
 endif()
 
 if (NOT EXISTS ${FREERTOS_PATH})
-    message(FATAL_ERROR "FREERTOS_PATH: '${FREERTOS_PATH}' Does not Exist")
+    message(WARNING "FREERTOS_PATH: '${FREERTOS_PATH}' Does not Exist")
 endif()
 
 find_path(FreeRTOS_COMMON_INCLUDE
