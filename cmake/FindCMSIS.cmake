@@ -138,7 +138,7 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
     endif()
 
     set(STM_DEVICES_FOUND TRUE)
-    foreach(DEVICE ${STM_DEVICES})
+    foreach(DEVICE STM_DEVICES)
         stm32_get_cores(DEV_CORES FAMILY ${FAMILY} DEVICE ${DEVICE})
         if(CORE AND (NOT ${CORE} IN_LIST DEV_CORES))
             continue()
