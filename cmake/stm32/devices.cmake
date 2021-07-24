@@ -1126,19 +1126,18 @@ function(stm32_get_devices_by_family STM_DEVICES)
     set(ARG_SINGLE "")
     set(ARG_MULTIPLE FAMILY)
 
-    if(ARGC GREATER_EQUAL 1)
-        if(NOT ${ARGV0} STREQUAL "STM_DEVICES")
-            message(WARNING "Passed list ${ARGV0} invalid. Still setting STM_DEVICES variable")
-        endif()
-    endif()
-    if(ARGC MATCHES 2)
-        if(NOT ARGV1 STREQUAL "FAMILY")
-            message(WARNING "Unknown keyword: ${ARGV1}. Matching all devices..")
-        endif()
-    endif()
     # Parse arguments. Multiple families or/and one core can be specified and will be stored
     # in ARG_<KeywordName>
     cmake_parse_arguments(PARSE_ARGV 1 ARG "${ARG_OPTIONS}" "${ARG_SINGLE}" "${ARG_MULTIPLE}")
+
+    # contains unexpected arguments (unknown keywords beofre ARG_MULTIPLE)
+    if(ARG_UNPARSED_ARGUMENTS)
+        message(WARNING "stm32_get_devices_by_family: Unknown keyword(s) ${ARG_UNPARSED_ARGUMENTS} will be ignored")
+    endif()
+    # is populated if ARG_SINGLE or ARG_MULTIPLE is used without values
+    if(ARG_KEYWORDS_MISSING_VALUES)
+        message(FATAL_ERROR "stm32_get_devices_by_family:${ARG_KEYWORDS_MISSING_VALUES} expects values")
+    endif()
 
     # Build a list of families by filtering the whole list with the specified families
     if(ARG_FAMILY)
@@ -1147,14 +1146,15 @@ function(stm32_get_devices_by_family STM_DEVICES)
             set(STM_DEVICE_LIST ${STM32_ALL_DEVICES})
             list(FILTER STM_DEVICE_LIST INCLUDE REGEX "^${FAMILY}")
             list(APPEND RESULTING_DEV_LIST ${STM_DEVICE_LIST})
+            if(NOT STM_DEVICE_LIST)
+                message(WARNING "stm32_get_devices_by_family: unknown FAMILY ${FAMILY}")
+            endif()
         endforeach()
     else()
         # No family argument, so get list of all devices
         set(RESULTING_DEV_LIST ${STM32_ALL_DEVICES})
     endif()
-    if(NOT RESULTING_DEV_LIST)
-        message(WARNING "Device families ${ARG_FAMILY} did not yield a device list")
-    endif()
+    
     set(${STM_DEVICES} ${RESULTING_DEV_LIST} PARENT_SCOPE)
 endfunction()
 
@@ -1163,21 +1163,36 @@ endfunction()
 # Print devices for H7 family: stm32_print_devices_by_family(FAMILY H7)
 # Print all devices: stm32_print_devices_by_family()
 function(stm32_print_devices_by_family)
+    # Specify keywords for argument parsing here
     set(ARG_OPTIONS "")
     set(ARG_SINGLE "")
     set(ARG_MULTIPLE FAMILY)
+
+    # Parse arguments. Multiple families or/and one core can be specified and will be stored
+    # in ARG_<KeywordName>
     cmake_parse_arguments(PARSE_ARGV 0 ARG "${ARG_OPTIONS}" "${ARG_SINGLE}" "${ARG_MULTIPLE}")
-    # Some basic argument checks
-    if(ARGC MATCHES 1)
-        # FAMILY is the only keyword here
-        if(NOT ARGV STREQUAL "FAMILY")
-            message(WARNING "Unknown keyword: ${ARGV}. Matching all devices..")
-        endif()
-        if(NOT ARG_FAMILY)
-            message(STATUS "FAMILY keyword specified without any families. Matching all devices..")
-        endif()
+
+    # contains unexpected arguments (unknown keywords beofre ARG_MULTIPLE)
+    if(ARG_UNPARSED_ARGUMENTS)
+        message(WARNING "stm32_print_devices_by_family: Unknown keyword(s) ${ARG_UNPARSED_ARGUMENTS} will be ignored")
     endif()
-    stm32_get_devices_by_family(STM_DEVICES FAMILY ${ARG_FAMILY})
-    string (REPLACE ";" " " STM_DEVICES "${STM_DEVICES}")
-    message(STATUS "Devices for ${ARG_FAMILY} family: ${STM_DEVICES}")
+    # is populated if ARG_SINGLE or ARG_MULTIPLE is used without values
+    if(ARG_KEYWORDS_MISSING_VALUES)
+        message(FATAL_ERROR "stm32_print_devices_by_family: ${ARG_KEYWORDS_MISSING_VALUES} expects values")
+    endif()
+
+    if(ARG_FAMILY)
+        # print devices one family per line
+        foreach(FAMILY ${ARG_FAMILY})
+            stm32_get_devices_by_family(STM_DEVICES FAMILY ${FAMILY})
+            string (REPLACE ";" " " STM_DEVICES "${STM_DEVICES}")
+            message(STATUS "Devices for ${FAMILY} family: ${STM_DEVICES}")
+        endforeach()
+    else()
+        #print all devices
+        stm32_get_devices_by_family(STM_DEVICES)
+        string (REPLACE ";" " " STM_DEVICES "${STM_DEVICES}")
+        message(STATUS "Devices for all families: ${STM_DEVICES}")
+    endif()
+
 endfunction()
