@@ -1146,7 +1146,7 @@ function(stm32_get_devices_by_family STM_DEVICES)
         set(RESULTING_DEV_LIST ${STM32_ALL_DEVICES})
     endif()
     
-    set(STM_DEVICES ${RESULTING_DEV_LIST} PARENT_SCOPE)
+    set(${STM_DEVICES} ${RESULTING_DEV_LIST} PARENT_SCOPE)
 endfunction()
 
 # Print the devices for a given family. You can also specify multiple device families.
