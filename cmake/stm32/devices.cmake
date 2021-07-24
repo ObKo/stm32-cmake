@@ -1126,18 +1126,9 @@ function(stm32_get_devices_by_family STM_DEVICES)
     set(ARG_SINGLE "")
     set(ARG_MULTIPLE FAMILY)
 
-    # Parse arguments. Multiple families or/and one core can be specified and will be stored
-    # in ARG_<KeywordName>
+    # Parse arguments. Multiple families can be specified and will be stored in ARG_<KeywordName>
     cmake_parse_arguments(PARSE_ARGV 1 ARG "${ARG_OPTIONS}" "${ARG_SINGLE}" "${ARG_MULTIPLE}")
-
-    # contains unexpected arguments (unknown keywords beofre ARG_MULTIPLE)
-    if(ARG_UNPARSED_ARGUMENTS)
-        message(WARNING "stm32_get_devices_by_family: Unknown keyword(s) ${ARG_UNPARSED_ARGUMENTS} will be ignored")
-    endif()
-    # is populated if ARG_SINGLE or ARG_MULTIPLE is used without values
-    if(ARG_KEYWORDS_MISSING_VALUES)
-        message(FATAL_ERROR "stm32_get_devices_by_family:${ARG_KEYWORDS_MISSING_VALUES} expects values")
-    endif()
+    stm32_dev_parser_check()
 
     # Build a list of families by filtering the whole list with the specified families
     if(ARG_FAMILY)
@@ -1147,7 +1138,7 @@ function(stm32_get_devices_by_family STM_DEVICES)
             list(FILTER STM_DEVICE_LIST INCLUDE REGEX "^${FAMILY}")
             list(APPEND RESULTING_DEV_LIST ${STM_DEVICE_LIST})
             if(NOT STM_DEVICE_LIST)
-                message(WARNING "stm32_get_devices_by_family: unknown FAMILY ${FAMILY}")
+                message(WARNING "No devices found for given family ${FAMILY}")
             endif()
         endforeach()
     else()
@@ -1155,7 +1146,7 @@ function(stm32_get_devices_by_family STM_DEVICES)
         set(RESULTING_DEV_LIST ${STM32_ALL_DEVICES})
     endif()
     
-    set(${STM_DEVICES} ${RESULTING_DEV_LIST} PARENT_SCOPE)
+    set(STM_DEVICES ${RESULTING_DEV_LIST} PARENT_SCOPE)
 endfunction()
 
 # Print the devices for a given family. You can also specify multiple device families.
@@ -1168,18 +1159,9 @@ function(stm32_print_devices_by_family)
     set(ARG_SINGLE "")
     set(ARG_MULTIPLE FAMILY)
 
-    # Parse arguments. Multiple families or/and one core can be specified and will be stored
-    # in ARG_<KeywordName>
+    # Parse arguments. Multiple families can be specified and will be stored in ARG_<KeywordName>
     cmake_parse_arguments(PARSE_ARGV 0 ARG "${ARG_OPTIONS}" "${ARG_SINGLE}" "${ARG_MULTIPLE}")
-
-    # contains unexpected arguments (unknown keywords beofre ARG_MULTIPLE)
-    if(ARG_UNPARSED_ARGUMENTS)
-        message(WARNING "stm32_print_devices_by_family: Unknown keyword(s) ${ARG_UNPARSED_ARGUMENTS} will be ignored")
-    endif()
-    # is populated if ARG_SINGLE or ARG_MULTIPLE is used without values
-    if(ARG_KEYWORDS_MISSING_VALUES)
-        message(FATAL_ERROR "stm32_print_devices_by_family: ${ARG_KEYWORDS_MISSING_VALUES} expects values")
-    endif()
+    stm32_dev_parser_check()
 
     if(ARG_FAMILY)
         # print devices one family per line
@@ -1189,10 +1171,22 @@ function(stm32_print_devices_by_family)
             message(STATUS "Devices for ${FAMILY} family: ${STM_DEVICES}")
         endforeach()
     else()
-        #print all devices
+        # print all devices
         stm32_get_devices_by_family(STM_DEVICES)
         string (REPLACE ";" " " STM_DEVICES "${STM_DEVICES}")
         message(STATUS "Devices for all families: ${STM_DEVICES}")
     endif()
 
 endfunction()
+
+# The arguments checked in this macro are filled by cmake_parse_argument
+macro(stm32_dev_parser_check)
+    # contains unexpected arguments (unknown keywords beofre ARG_MULTIPLE)
+    if(ARG_UNPARSED_ARGUMENTS)
+        message(WARNING "Unknown keyword(s) ${ARG_UNPARSED_ARGUMENTS} will be ignored")
+    endif()
+    # is populated if ARG_SINGLE or ARG_MULTIPLE is used without values
+    if(ARG_KEYWORDS_MISSING_VALUES)
+        message(FATAL_ERROR "Keyword ${ARG_KEYWORDS_MISSING_VALUES} expects values")
+    endif()
+endmacro()
