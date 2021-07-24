@@ -1126,6 +1126,10 @@ function(stm32_get_devices_by_family STM_DEVICES)
     set(ARG_SINGLE "")
     set(ARG_MULTIPLE FAMILY)
 
+    if(NOT ${ARGV0} STREQUAL "STM_DEVICES")
+        message(WARNING "Passed list ${ARGV0} invalid. Still setting STM_DEVICES variable")
+    endif()
+
     # Parse arguments. Multiple families can be specified and will be stored in ARG_<KeywordName>
     cmake_parse_arguments(PARSE_ARGV 1 ARG "${ARG_OPTIONS}" "${ARG_SINGLE}" "${ARG_MULTIPLE}")
     stm32_dev_parser_check()
