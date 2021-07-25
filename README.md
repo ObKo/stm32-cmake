@@ -190,10 +190,10 @@ CMSIS package will generate linker script for your device automatically (target 
 
 In the following functions, you can also specify mutiple families.
 
-* `stm32_get_devices_by_family(STM_DEVICES [FAMILY <family>])` - return into `STM_DEVICES` all
-  supported devices by family (or all devices if `<family>` is empty)
-* `stm32_print_devices_by_family([FAMILY <family>])` - Print all supported devices by family
-  (or all devices if `<family>` is empty)
+* `stm32_get_devices_by_family(STM_DEVICES [FAMILY families...])` - return into `STM_DEVICES` all
+  supported devices by family (or all devices if `FAMILY` is omitted)
+* `stm32_print_devices_by_family([FAMILY families...])` - Print all supported devices by family
+  (or all devices if `FAMILY` is omitted)
 
 # Additional CMake modules
 
