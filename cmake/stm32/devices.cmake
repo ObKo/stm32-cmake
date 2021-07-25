@@ -1191,7 +1191,7 @@ endmacro()
 
 # Pretty printer to limit amount of list entries printed per line
 macro(stm32_pretty_print_dev_list FAMILIES STM_DEVICES)
-    if(${FAMILIES} MATCHES "all")
+    if(${FAMILIES} STREQUAL "all")
         message(STATUS  "Devices for all families")
     else()
         message(STATUS "Devices for ${FAMILIES} family")
