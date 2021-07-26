@@ -76,10 +76,21 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS})
     endif()
 
     if((NOT STM32_CMSIS_${FAMILY}_PATH) AND (NOT STM32_CUBE_${FAMILY}_PATH))
-        set(STM32_CUBE_${FAMILY}_PATH /opt/STM32Cube${FAMILY} CACHE PATH "Path to STM32Cube${FAMILY}")
-        message(STATUS "Neither STM32_CUBE_${FAMILY}_PATH nor STM32_CMSIS_${FAMILY}_PATH specified using default  STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
+        set(DEFAULT_STM32_CUBE_${FAMILY}_PATH "/opt/STM32Cube${FAMILY}")
+        if(EXISTS ${DEFAULT_STM32_CUBE_${FAMILY}_PATH})
+            set(STM32_CUBE_${FAMILY}_PATH ${DEFAULT_STM32_CUBE_${FAMILY}_PATH} CACHE PATH "Path to STM32Cube${FAMILY}")
+            message(STATUS "Neither STM32_CUBE_${FAMILY}_PATH nor STM32_CMSIS_${FAMILY}_PATH specified."
+              "Using default STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
+        else()
+            message(STATUS "Neither STM32_CUBE_${FAMILY}_PATH nor STM32_CMSIS_${FAMILY}_PATH specified. "
+              "default STM32_CUBE_${FAMILY}_PATH: ${DEFAULT_STM32_CUBE_${FAMILY}_PATH} does not exist. Leaving empty.")
+        endif()
     endif()
-        
+
+    if ((CMSIS_FIND_REQUIRED_${COMP}) AND (NOT EXISTS ${STM32_CMSIS_${FAMILY}_PATH}) AND (NOT EXISTS ${STM32_CUBE_${FAMILY}_PATH}}))
+        message(WARNING "For REQUIRED COMPONENT: ${COMP}, Neither STM32_CUBE_${FAMILY}_PATH: '${STM32_CUBE_${FAMILY}_PATH}' nor STM32_CMSIS_${FAMILY}_PATH: '${STM32_CMSIS_${FAMILY}_PATH}' Exists")
+    endif()
+
     find_path(CMSIS_${FAMILY}${CORE_U}_CORE_PATH
         NAMES Include/cmsis_gcc.h
         PATHS "${STM32_CMSIS_PATH}" "${STM32_CUBE_${FAMILY}_PATH}/Drivers/CMSIS"
