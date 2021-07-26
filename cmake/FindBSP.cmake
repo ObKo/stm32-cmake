@@ -267,11 +267,18 @@ foreach(COMP ${BSP_FIND_COMPONENTS})
     endif()
 
     if(NOT STM32_CUBE_${FAMILY}_PATH)
-        set(STM32_CUBE_${FAMILY}_PATH /opt/STM32Cube${FAMILY} CACHE PATH "Path to STM32Cube${FAMILY}")
-        message(STATUS "No STM32_CUBE_${FAMILY}_PATH specified using default: ${STM32_CUBE_${FAMILY}_PATH}")
+        set(DEFAULT_STM32_CUBE_${FAMILY}_PATH "/opt/STM32Cube${FAMILY}")
+        if(EXISTS ${DEFAULT_STM32_CUBE_${FAMILY}_PATH})
+            set(STM32_CUBE_${FAMILY}_PATH ${DEFAULT_STM32_CUBE_${FAMILY}_PATH} CACHE PATH "Path to STM32Cube${FAMILY}")
+            message(STATUS "No STM32_CUBE_${FAMILY}_PATH specified. "
+              "Using default STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
+        else()
+            message(STATUS "No STM32_CUBE_${FAMILY}_PATH specified. "
+              "default STM32_CUBE_${FAMILY}_PATH: ${DEFAULT_STM32_CUBE_${FAMILY}_PATH} does not exist. Leaving empty.")
+        endif()
     endif()
 
-    if ((${BSP_FIND_REQUIRED_${COMP}}) AND (NOT EXISTS ${STM32_CUBE_${FAMILY}_PATH}))
+    if((BSP_FIND_REQUIRED_${COMP}) AND (NOT EXISTS ${STM32_CUBE_${FAMILY}_PATH}))
       message(WARNING "For REQUIRED COMPONENT: ${COMP}, STM32_CUBE_${FAMILY}_PATH: '${STM32_CUBE_${FAMILY}_PATH}' Does not Exist")
     endif()
 

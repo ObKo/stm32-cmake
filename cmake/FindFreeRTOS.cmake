@@ -12,11 +12,17 @@ if(NOT FREERTOS_PATH)
 endif()
 
 if(NOT FREERTOS_PATH)
-    set(FREERTOS_PATH /opt/FreeRTOS CACHE PATH "Path to FreeRTOS")
-    message(STATUS "No FREERTOS_PATH specified using default: ${FREERTOS_PATH}")
+    set(DEFAULT_FREERTOS_PATH "/opt/FreeRTOS")
+    if (EXISTS ${DEFAULT_FREERTOS_PATH})
+        set(FREERTOS_PATH ${DEFAULT_FREERTOS_PATH} CACHE PATH "Path to FreeRTOS")
+        message(STATUS "No FREERTOS_PATH specified using default: ${FREERTOS_PATH}")
+    else()
+        message(STATUS "No FREERTOS_PATH specified."
+          "default FREERTOS_PATH: ${DEFAULT_FREERTOS_PATH} does not exist. Leaving Empty.")
+    endif()
 endif()
 
-if (NOT EXISTS ${FREERTOS_PATH})
+if ((FREERTOS_FIND_REQUIRED) AND (NOT EXISTS ${FREERTOS_PATH}))
     message(WARNING "FREERTOS_PATH: '${FREERTOS_PATH}' Does not Exist")
 endif()
 
