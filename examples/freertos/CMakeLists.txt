@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.16)
 set(PROJ_NAME stm32-freertos)
 set(STM32_CMAKE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 
