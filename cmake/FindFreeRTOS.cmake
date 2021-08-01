@@ -66,7 +66,7 @@ macro(stm32_find_freertos FreeRTOS_NAMESPACE FREERTOS_PATH)
 
     find_path(FreeRTOS_SOURCE_DIR
         NAMES tasks.c
-        PATHS "${FREERTOS_PATH}" "${FREERTOS_PATH}/FreeRTOS" 
+        PATHS "${FREERTOS_PATH}" "${FREERTOS_PATH}/FreeRTOS"
         PATH_SUFFIXES  "Source"
         NO_DEFAULT_PATH
     )
