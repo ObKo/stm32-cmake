@@ -103,7 +103,7 @@ set(HAL_LL_DRIVERS_G4
 )
 
 set(HAL_DRIVERS_H7
-    adc cec comp cordix cortex crc cryp dac dcmi dfsdm dma dma2d dsi dts eth exti fdcan
+    adc cec comp cordic cortex crc cryp dac dcmi dfsdm dma dma2d dsi dts eth exti fdcan
     flash fmac gfxmmu gpio hash hcd hrtim hsem i2c i2s irda iwdg jpeg lptim ltdc mdios
     mdma mmc nand nor opamp ospi otfdec pcd pssi pwr qspi ramecc rcc rng rtc sai 
     sd sdram smartcard smbus spdifrx spi sram swpmi tim uart usart wwdg
