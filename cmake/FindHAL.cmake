@@ -113,7 +113,7 @@ set(HAL_EX_DRIVERS_H7
     rng rtc sai sd smartcard spi tim uart usart
 )
 set(HAL_LL_DRIVERS_H7
-    adc bdma comp crc crs dac delayblock dma dma2d exti fmac fmc gpio hrtim i2c lptim
+    adc bdma comp cordic crc crs dac delayblock dma dma2d exti fmac fmc gpio hrtim i2c lptim
     lpuart mdma opamp pwr rcc rng rtc sdmmc spi swpmi tim usart usb utils
 )
 
