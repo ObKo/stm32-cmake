@@ -296,9 +296,9 @@ Other FreeRTOS libraries, with `FREERTOS_NAMESPACE` being set as specified in th
 ## <a id="lwip"></a> LwIP
 
 [cmake/FindLwIP](cmake/FindLwIP.cmake) - finds LwIP sources in STM32Cube repository and format them
-as `IMPORTED` targets. You should should have a `lwipopts.h` in the application includes
-for this to work. If you want to use the Netconn or Socket API, you need to link against
-the CMSIS support like specified in the [FreeRTOS section](#freertos).
+as `IMPORTED` targets. This requires a `lwipopts.h` in the application include path to work.
+If the Netconn or Socket API is used, the CMSIS support needs to be linked like specified in
+the [FreeRTOS section](#freertos).
 
 Available LwIP libraries:
 
