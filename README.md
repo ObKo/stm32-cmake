@@ -42,7 +42,7 @@ It uses cmake and GCC, along with newlib (libc), STM32Cube. Supports F0 F1 F2 F3
 The `lwip` support does not have a dedicated example because most STM devices have different PHYs
 and/or there is machine and linker script specific code which makes it difficult to create a
 generic example. You can find an UDP echo server application for the H743ZI board
-[here](https://github.com/robamu-org/stm32h743-cmake-minimal).
+[here](https://github.com/robamu-org/stm32-cmake-projects).
 
 # Usage
 
