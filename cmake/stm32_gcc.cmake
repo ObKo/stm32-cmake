@@ -1,3 +1,6 @@
+# Setting this option to ON will cause CMake to add NO_DEFAULT_PATH to the find_program calls
+# See https://cmake.org/cmake/help/latest/command/find_program.html for more information about
+# this option
 option(STM32_TOOLCHAIN_NO_DEFAULT_PATH
 	"Do not search CMake default paths to find cross-compiler" 
 	OFF

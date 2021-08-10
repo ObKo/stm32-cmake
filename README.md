@@ -64,6 +64,10 @@ These configuration variables are optional:
 * `TARGET_TRIPLET` - toolchain target triplet, **default**: `arm-none-eabi`
 * `FREERTOS_PATH` - Path to the FreeRTOS kernel when compiling with a RTOS. Does not need to be
    specified when using CMSIS
+* `STM32_TOOLCHAIN_NO_DEFAULT_PATH` - `option` which is `OFF` by default. Can be set to `ON` if the
+   default path should not be searched by CMake to find the cross-compiler toolchain binaries.
+   This is done by supplying or omitting the `NO_DEFAULT_PATH` option in
+   the [`find_program`](https://cmake.org/cmake/help/latest/command/find_program.html) calls
 
 ### Helper script on Unix shells
 
