@@ -195,7 +195,7 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS_FAMILIES})
     # search for system_stm32[XX]xx.c
     find_file(CMSIS_${FAMILY}${CORE_U}_SYSTEM
         NAMES system_stm32${FAMILY_L}xx.c
-        PATHS "${CMSIS_${FAMILY}${CORE_U}_PATH}/Source/Templates"
+        PATHS "${CMSIS_${FAMILY}${CORE_U}_PATH}/Source/Templates" "${CMAKE_SOURCE_DIR}"
         NO_DEFAULT_PATH
     )
     list(APPEND CMSIS_SOURCES "${CMSIS_${FAMILY}${CORE_U}_SYSTEM}")
@@ -221,7 +221,7 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS_FAMILIES})
         
         find_file(CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP
             NAMES startup_stm32${TYPE_L}.s startup_stm32${TYPE_L}${CORE_Ucm}.s
-            PATHS "${CMSIS_${FAMILY}${CORE_U}_PATH}/Source/Templates/gcc"
+            PATHS "${CMSIS_${FAMILY}${CORE_U}_PATH}/Source/Templates/gcc" "${CMAKE_SOURCE_DIR}"
             NO_DEFAULT_PATH
         )
         list(APPEND CMSIS_SOURCES "${CMSIS_${FAMILY}${CORE_U}_${TYPE}_STARTUP}")
