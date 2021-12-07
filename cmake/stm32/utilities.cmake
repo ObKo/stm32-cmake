@@ -13,19 +13,19 @@ function(stm32_util_create_family_targets FAMILY)
 
     if(NOT (TARGET STM32::${FAMILY}${CORE_C}))
         add_library(STM32::${FAMILY}${CORE_C} INTERFACE IMPORTED)
-        target_compile_options(STM32::${FAMILY}${CORE_C} INTERFACE 
+        target_compile_options(STM32::${FAMILY}${CORE_C} INTERFACE
             --sysroot="${TOOLCHAIN_SYSROOT}"
-            -mthumb -mabi=aapcs -Wall -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin -ffast-math
+            -mthumb -mabi=aapcs -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin -ffast-math
             $<$<CONFIG:Debug>:-Og>
             $<$<CONFIG:Release>:-Os>
         )
-        target_link_options(STM32::${FAMILY}${CORE_C} INTERFACE 
+        target_link_options(STM32::${FAMILY}${CORE_C} INTERFACE
             --sysroot="${TOOLCHAIN_SYSROOT}"
             -mthumb -mabi=aapcs -Wl,--gc-sections
             $<$<CONFIG:Debug>:-Og>
             $<$<CONFIG:Release>:-Os -s>
         )
-        target_compile_definitions(STM32::${FAMILY}${CORE_C} INTERFACE 
+        target_compile_definitions(STM32::${FAMILY}${CORE_C} INTERFACE
             STM32${FAMILY}
         )
     endif()
@@ -33,7 +33,7 @@ function(stm32_util_create_family_targets FAMILY)
         if(NOT (TARGET STM32::${TYPE}${CORE_C}))
             add_library(STM32::${TYPE}${CORE_C} INTERFACE IMPORTED)
             target_link_libraries(STM32::${TYPE}${CORE_C} INTERFACE STM32::${FAMILY}${CORE_C})
-            target_compile_definitions(STM32::${TYPE}${CORE_C} INTERFACE 
+            target_compile_definitions(STM32::${TYPE}${CORE_C} INTERFACE
                 STM32${TYPE}
             )
         endif()
