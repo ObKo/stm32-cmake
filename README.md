@@ -115,10 +115,14 @@ CMSIS consists of three main components:
 stm32-cmake uses modern CMake features notably imported targets and target properties.
 Every CMSIS component is CMake's target (aka library), which defines compiler definitions, compiler flags, include dirs, sources, etc. to build and propagate them as dependencies. So in a simple use-case all you need is to link your executable with library `CMSIS::STM32::<device>`:
 ```cmake
+project(MyProject C ASM)
+
 add_executable(stm32-template main.c)
 target_link_libraries(stm32-template CMSIS::STM32::F407VG)
 ```
 That will add include directories, startup source, linker script and compiler flags to your executable.
+
+***Note**: Don't forget to explicitely enable the `ASM` language for the project, otherwise the startup source will not be compiled.
 
 CMSIS creates the following targets:
 
