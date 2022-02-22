@@ -122,7 +122,7 @@ target_link_libraries(stm32-template CMSIS::STM32::F407VG)
 ```
 That will add include directories, startup source, linker script and compiler flags to your executable.
 
-***Note**: Don't forget to explicitely enable the `ASM` language for the project, otherwise the startup source will not be compiled.
+***Note**: Don't forget to explicitely enable the `ASM` language for the project, otherwise the startup source will not be compiled.*
 
 CMSIS creates the following targets:
 
