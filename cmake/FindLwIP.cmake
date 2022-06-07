@@ -7,8 +7,10 @@ find_path(LwIP_ROOT
     NO_DEFAULT_PATH
 )
 
+set(MSG_PREFIX "stm32-FindLwIP |")
+
 if(LwIP_ROOT MATCHES "LwIP_ROOT-NOTFOUND")
-    message(WARNING "LwIP root foolder not found. LwIP might not be supported")
+    message(WARNING "${MSG_PREFIX} LwIP root foolder not found. LwIP might not be supported")
 endif()
 
 set(LWIP_DIR ${LwIP_ROOT})
@@ -20,20 +22,25 @@ find_path(LwIP_SOURCE_PATH
 )
 
 if(LwIP_SOURCE_PATH MATCHES "LwIP_SOURCE_PATH-NOTFOUND")
-    message(WARNING "LwIP filelist CMake file not found. Build might fail")
+    message(WARNING "${MSG_PREFIX} LwIP filelist CMake file not found. Build might fail")
 endif()
 
 if(IS_DIRECTORY "${LwIP_SOURCE_PATH}/include")
     set(LwIP_INCLUDE_DIR "${LwIP_SOURCE_PATH}/include")
 else()
-    message(WARNING "LwIP include directory not found. Build might fail")
+    message(WARNING "${MSG_PREFIX} LwIP include directory not found. Build might fail")
 endif()
 
 if(IS_DIRECTORY "${LwIP_ROOT}/system")
     set(LwIP_SYS_INCLUDE_DIR "${LwIP_ROOT}/system")
     set(LwIP_SYS_SOURCES "${LwIP_ROOT}/system/OS/sys_arch.c")
 else()
-    message(WARNING "LwIP system include directory not found. Build might fail")
+    message(WARNING "${MSG_PREFIX} LwIP system include directory not found. Build might fail")
+endif()
+
+if(NOT EXISTS "${LwIP_SOURCE_PATH}/Filelists.cmake")
+    message(WARNING "${MSG_PREFIX} ${LwIP_SOURCE_PATH}/Filelists.cmake file not found.")
+    message(FATAL_ERROR "${MSG_PREFIX} Please ensure that the LwIP version is at least 2.1.0")
 endif()
 
 # Use Filelists.cmake to get list of sources to compile
