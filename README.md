@@ -2,8 +2,8 @@
 
 ![Tests](https://github.com/ObKo/stm32-cmake/workflows/Tests/badge.svg)
 
-This project is used to develop applications for the STM32 - ST's ARM Cortex-Mx MCUs. 
-It uses cmake and GCC, along with newlib (libc), STM32Cube. Supports F0 F1 F2 F3 F4 F7 G0 G4 H7 L0 L1 L4 L5 WB WL device families.
+This project is used to develop applications for the STM32 - ST's ARM Cortex-Mx MCUs.
+It uses cmake and GCC, along with newlib (libc), STM32Cube. Supports F0 F1 F2 F3 F4 F7 G0 G4 H7 L0 L1 L4 L5 U5 WB WL device families.
 
 ## Requirements
 
@@ -32,10 +32,10 @@ It uses cmake and GCC, along with newlib (libc), STM32Cube. Supports F0 F1 F2 F3
 * `blinky` ([examples/blinky](examples/blinky)) - blink led using STM32 HAL library and SysTick.
    It will compile a project for the `F4` family by default, but you can also compile for the
    `L0` and `F1` family by passing `BLINKY_L0_EXAMPLE=ON` or `BLINKY_F1_EXAMPLE=ON` to the CMake
-   generation call.
+   generation call. Using C++ instead of C is possible using `USE_CPP_FILE=ON`.
 * `freertos` ([examples/freertos](examples/freertos)) - blink led using STM32 HAL library and FreeRTOS.
    You need to specify at least one board by passing `FREERTOS_<BOARD>_EXAMPLE=ON` to CMake.
-   Currently, the example can be built for the `H743ZI` and `F407VG` board targets. 
+   Currently, the example can be built for the `H743ZI` and `F407VG` board targets.
    You can opt to use the FreeRTOS CMSIS implementation provided by the Cube repository by supplying
    `USE_CMSIS_RTOS=ON` or `USE_CMSIS_RTOS_V2` to CMake.
 
@@ -55,12 +55,14 @@ The most important set of variables which needs to be set can be found in the fo
 
 These configuration options need to be set for the build process to work properly:
 
-* `STM32_TOOLCHAIN_PATH` - where toolchain is located, **default**: `/usr`
 * `STM32_CUBE_<FAMILY>_PATH` - path to STM32Cube directory, where `<FAMILY>` is one
-   of `F0 F1 F2 F3 F4 F7 G0 G4 H7 L0 L1 L4 L5 WB WL` **default**: `/opt/STM32Cube<FAMILY>`
+   of `F0 F1 F2 F3 F4 F7 G0 G4 H7 L0 L1 L4 L5 U5 WB WL` **default**: `/opt/STM32Cube<FAMILY>`
 
 These configuration variables are optional:
 
+* `STM32_TOOLCHAIN_PATH` - where toolchain is located, **default**: `/usr`. Alternatively
+  you can add the folder containing the toolchain binaries to the system path. If both are given,
+  the `STM32_TOOLCHAIN_PATH` setting takes precedence
 * `TARGET_TRIPLET` - toolchain target triplet, **default**: `arm-none-eabi`
 * `FREERTOS_PATH` - Path to the FreeRTOS kernel when compiling with a RTOS. Does not need to be
    specified when using CMSIS
@@ -112,8 +114,8 @@ STM32WB is a multi-cores device even if the second core is not accessible by end
 CMSIS consists of three main components:
 
 * Family-specific headers, e.g. `stm32f4xx.h`
-* Device type-specific startup sources (e.g. `startup_stm32f407xx.s`)
-* Device-specific linker scripts which requires information about memory sizes
+* Device type-specific startup sources (e.g. `startup_stm32f407xx.s`) (if ASM language is enabled)
+* Device-specific linker scripts which requires information about memory sizes (if ASM language is enabled)
 
 stm32-cmake uses modern CMake features notably imported targets and target properties.
 Every CMSIS component is CMake's target (aka library), which defines compiler definitions,
@@ -177,13 +179,13 @@ HAL module will search all drivers supported by family and create the following 
 Here is typical usage for a F4 device:
 
 ```cmake
-add_executable(${TARGET_NAME} blinky.c stm32f4xx_hal_conf.h)
-target_link_libraries(${TARGET_NAME}
+add_executable(stm32-blinky-f4 blinky.c stm32f4xx_hal_conf.h)
+target_link_libraries(stm32-blinky-f4
     HAL::STM32::F4::RCC
     HAL::STM32::F4::GPIO
     HAL::STM32::F4::CORTEX
     CMSIS::STM32::F407VG
-    STM32::NoSys 
+    STM32::NoSys
 )
 ```
 
@@ -221,7 +223,9 @@ CMSIS package will generate linker script for your device automatically (target
 * `stm32_get_memory_info((CHIP <chip>)|(DEVICE <device> TYPE <type>) [FLASH|RAM|CCRAM|STACK|HEAP] [SIZE <size>] [ORIGIN <origin>])` - get information about device memories (into `<size>` and `<origin>`). Linker script generator uses values from this function
 * `stm32_print_size_of_target(<target>)` - Print the application sizes for all formats
 * `stm32_generate_binary_file(<target>)` - Generate the binary file for the given target
+* `stm32_generate_srec_file(<target>)` - Generate the srec file for the given target
 * `stm32_generate_hex_file(<target>)` - Generate the hex file for the given target
+
 
 In the following functions, you can also specify mutiple families.
 
@@ -253,7 +257,7 @@ device family also has to be specified as a component for the `FreeRTOS` package
 
 CMSIS RTOS can be used by specifying a `CMSIS` target and by finding the CMSIS `RTOS` package.
 The following section will show a few example configurations for the H7 and F4 family.
-You can also find example code for the `H743ZI` and `F407VG` devices in the `examples`
+You can also find example code for several devices in the [examples](https://github.com/ObKo/stm32-cmake/tree/master/examples/freertos)
 folder.
 
 Typical usage for a H7 device when using the M7 core, using an external kernel without CMSIS
@@ -276,6 +280,30 @@ find_package(FreeRTOS COMPONENTS ARM_CM4F REQUIRED)
 target_link_libraries(${TARGET_NAME} PRIVATE
     ...
     FreeRTOS::ARM_CM4F
+)
+```
+
+For ARMv8-M architecture (CM23 and CM33) you can choose "No Trust Zone" port:
+
+```cmake
+find_package(FreeRTOS COMPONENTS ARM_CM33_NTZ REQUIRED)
+target_link_libraries(${TARGET_NAME} PRIVATE
+    ...
+    FreeRTOS::ARM_CM33_NTZ
+)
+```
+
+Or you can use the trust zone with:
+
+```cmake
+find_package(FreeRTOS COMPONENTS ARM_CM33 REQUIRED)
+target_link_libraries(${SECURE_TARGET_NAME} PRIVATE
+    ...
+    FreeRTOS::ARM_CM33::SECURE
+)
+target_link_libraries(${NON_SECURE_TARGET_NAME} PRIVATE
+    ...
+    FreeRTOS::ARM_CM33::NON_SECURE
 )
 ```
 
@@ -306,8 +334,9 @@ in the Cube repository
 For the multi-core architectures, both family and core need to be specified like shown in the
 example above.
 
-The following FreeRTOS ports are supported in general: `ARM_CM0`, `ARM_CM3`, `ARM_CM4F`, `ARM_CM7`,
-`ARM_CM3_MPU`, `ARM_CM4_MPU`, `ARM_CM7_MPU`.
+The following FreeRTOS ports are supported in general: `ARM_CM0`, `ARM_CM3`,
+`ARM_CM3_MPU`, `ARM_CM4F`, `ARM_CM4_MPU`, `ARM_CM7`, `ARM_CM7_MPU`, 
+`ARM_CM23`, `ARM_CM23_NTZ`, `ARM_CM33`, `ARM_CM33_NTZ`.
 
 Other FreeRTOS libraries, with `FREERTOS_NAMESPACE` being set as specified in the examples above:
 
