@@ -165,7 +165,8 @@ find_package(HAL [HAL_version] COMPONENTS STM32F4 REQUIRED)
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 ```
 
-*`CMAKE_INCLUDE_CURRENT_DIR` here because HAL requires `stm32<family>xx_hal_conf.h` file being in include headers path.*
+`CMAKE_INCLUDE_CURRENT_DIR` is used here because HAL
+requires `stm32<family>xx_hal_conf.h` file being in include headers path.
 
 [HAL_version] is an optional version requirement. See [find_package documentation](https://cmake.org/cmake/help/v3.13/command/find_package.html?highlight=find%20package#id4). This parameter does not make sense if multiple STM32 families are requested.
 
