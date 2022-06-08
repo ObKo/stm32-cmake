@@ -92,7 +92,9 @@ $env:STM32_CUBE_<FAMILY>_PATH="<PathToCubeRoot>"
 
 ## <a id="cmsis"></a> Common usage
 
-First thing that you need to do after toolchain configuration in your `CMakeLists.txt` script is to find CMSIS package:
+First thing that you need to do after toolchain configuration in your `CMakeLists.txt` script is
+to find CMSIS package:
+
 ```cmake
 find_package(CMSIS [CMSIS_version] COMPONENTS STM32F4 REQUIRED)
 ```
@@ -107,7 +109,7 @@ This parameter does not make sense if multiple STM32 families are requested.
 Each STM32 device can be categorized into family and device type groups, for example STM32F407VG
 is device from `F4` family, with type `F407xx`.
 
-***Note**: Some devices have two different cores (e.g. STM32H7 has Cortex-M7 and Cortex-M4).
+**Note**: Some devices have two different cores (e.g. STM32H7 has Cortex-M7 and Cortex-M4).
 For those devices the name used must include the core name e.g STM32H7_M7 and STM32H7_M4.
 STM32WB is a multi-cores device even if the second core is not accessible by end user.
 
@@ -176,18 +178,8 @@ HAL module will search all drivers supported by family and create the following 
 
 ***Note**: Targets for multi-cores devices will look like `HAL::STM32::<FAMILY>::<CORE>`, `HAL::STM32::<FAMILY>::<CORE>::<DRIVER>`, etc.*
 
-Here is typical usage for a F4 device:
-
-```cmake
-add_executable(stm32-blinky-f4 blinky.c stm32f4xx_hal_conf.h)
-target_link_libraries(stm32-blinky-f4
-    HAL::STM32::F4::RCC
-    HAL::STM32::F4::GPIO
-    HAL::STM32::F4::CORTEX
-    CMSIS::STM32::F407VG
-    STM32::NoSys
-)
-```
+You can find a typical usage of the HAL
+[F4 targets here](https://github.com/ObKo/stm32-cmake/blob/master/examples/blinky/CMakeLists.txt#L53).
 
 Here is another usage for a H7 device with the M7 core:
 
