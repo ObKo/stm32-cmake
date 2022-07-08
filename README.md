@@ -60,6 +60,9 @@ These configuration options need to be set for the build process to work properl
 
 These configuration variables are optional:
 
+* `CMAKE_TOOLCHAIN_FILE` - Can be `set` in the `CMakeLists.txt` file before the `project` call if
+  the toolchain file is to be hardcoded for the project instead of being passed as an argument to
+  the build generation call
 * `STM32_TOOLCHAIN_PATH` - where toolchain is located, **default**: `/usr`. Alternatively
   you can add the folder containing the toolchain binaries to the system path. If both are given,
   the `STM32_TOOLCHAIN_PATH` setting takes precedence
@@ -200,9 +203,6 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 cmake -DCMAKE_TOOLCHAIN_FILE=<path_to_gcc_stm32.cmake> -DCMAKE_BUILD_TYPE=Debug <path_to_sources>
 cmake --build .
 ```
-
-You can also ommit the `-DCMAKE_TOOLCHAIN_FILE` argument and use `set (CMAKE_TOOLCHAIN_FILE ...)`
-in your `CMakeLists.txt` file
 
 ## Linker script & variables
 
