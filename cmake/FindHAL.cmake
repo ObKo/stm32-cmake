@@ -229,13 +229,6 @@ set(HAL_LL_DRIVERS_WL
     rng rtc spi tim usart utils
 )
 
-foreach(FAMILY_SUFFIX ${STM32_SUPPORTED_FAMILIES_SHORT_NAME})
-    list(APPEND HAL_DRIVERS ${HAL_DRIVERS_${FAMILY_SUFFIX}})
-    list(APPEND HAL_LL_DRIVERS ${HAL_LL_DRIVERS_${FAMILY_SUFFIX}})
-endforeach()
-list(REMOVE_DUPLICATES HAL_DRIVERS)
-list(REMOVE_DUPLICATES HAL_LL_DRIVERS)
- 
 # This function gets a list of hal_driver using a given prefix and suffix
 #
 # out_list_hal_drivers   list of hal_drivers foud
@@ -264,16 +257,51 @@ function(get_list_hal_drivers out_list_hal_drivers hal_drivers_path hal_driver_t
     set(${out_list_hal_drivers} ${filtered_files} PARENT_SCOPE)
 endfunction()
 
+#foreach(FAMILY_SUFFIX ${STM32_SUPPORTED_FAMILIES_SHORT_NAME})
+#list(APPEND HAL_DRIVERS ${HAL_DRIVERS_${FAMILY_SUFFIX}})
+#list(APPEND HAL_LL_DRIVERS ${HAL_LL_DRIVERS_${FAMILY_SUFFIX}})
+#endforeach()
+#list(REMOVE_DUPLICATES HAL_DRIVERS)
+#list(REMOVE_DUPLICATES HAL_LL_DRIVERS)
+
+#Checking the families provided to find_package(HAL <params>) such as STM32F4
 foreach(COMP ${HAL_FIND_COMPONENTS})
     string(TOLOWER ${COMP} COMP_L)
     string(TOUPPER ${COMP} COMP_U)
-    
+
     string(REGEX MATCH "^STM32([FGHLMUW]P?[0-9BL])([0-9A-Z][0-9M][A-Z][0-9A-Z])?_?(M0PLUS|M4|M7)?.*$" COMP_U ${COMP_U})
     if(CMAKE_MATCH_1)
-        list(APPEND HAL_FIND_COMPONENTS_FAMILIES ${COMP})
+        set(FAMILY ${CMAKE_MATCH_1})
+        list(APPEND HAL_FIND_COMPONENTS_FAMILIES ${COMP_U})
+
+        string(TOLOWER ${FAMILY} FAMILY_L)
+        find_path(HAL_${FAMILY}_PATH
+            NAMES Inc/stm32${FAMILY_L}xx_hal.h
+            PATHS "${STM32_HAL_${FAMILY}_PATH}" "${STM32_CUBE_${FAMILY}_PATH}/Drivers/STM32${FAMILY}xx_HAL_Driver"
+            NO_DEFAULT_PATH
+            )
+
+        get_list_hal_drivers(HAL_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH} "hal")
+        get_list_hal_drivers(HAL_LL_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH} "ll")
+        list(APPEND HAL_DRIVERS ${HAL_DRIVERS_${FAMILY}})
+        list(APPEND HAL_LL_DRIVERS ${HAL_LL_DRIVERS_${FAMILY}})
+
         message(TRACE "FindHAL: append COMP ${COMP} to HAL_FIND_COMPONENTS_FAMILIES")
         continue()
+    else()
+        list(APPEND HAL_FIND_COMPONENTS_UNHANDLED ${COMP})
     endif()
+
+endforeach()
+
+list(REMOVE_DUPLICATES HAL_DRIVERS)
+list(REMOVE_DUPLICATES HAL_LL_DRIVERS)
+
+#Checking the componenet requested on the find_package(HAL <params>) such as uart, ll_adc...
+foreach(COMP ${HAL_FIND_COMPONENTS_UNHANDLED})
+    string(TOLOWER ${COMP} COMP_L)
+    string(TOUPPER ${COMP} COMP_U)
+    
     if(${COMP_L} IN_LIST HAL_DRIVERS)
         list(APPEND HAL_FIND_COMPONENTS_DRIVERS ${COMP})
         message(TRACE "FindHAL: append COMP ${COMP} to HAL_FIND_COMPONENTS_DRIVERS")
@@ -414,6 +442,7 @@ foreach(COMP ${HAL_FIND_COMPONENTS_FAMILIES})
         string(TOUPPER ${DRV_COMP} DRV)
         
         if(NOT (DRV_L IN_LIST HAL_DRIVERS_${FAMILY}))
+            message(TRACE "FindHAL: SKIPPING unused driver (${DRV_L})")
             continue()
         endif()
         
