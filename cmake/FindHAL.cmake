@@ -32,30 +32,43 @@ endfunction()
 foreach(COMP ${HAL_FIND_COMPONENTS})
     string(TOLOWER ${COMP} COMP_L)
     string(TOUPPER ${COMP} COMP_U)
-
     string(REGEX MATCH "^STM32([FGHLMUW]P?[0-9BL])([0-9A-Z][0-9M][A-Z][0-9A-Z])?_?(M0PLUS|M4|M7)?.*$" COMP_U ${COMP_U})
     if(CMAKE_MATCH_1)
         set(FAMILY ${CMAKE_MATCH_1})
-        list(APPEND HAL_FIND_COMPONENTS_FAMILIES ${COMP_U})
-
-        string(TOLOWER ${FAMILY} FAMILY_L)
-        find_path(HAL_${FAMILY}_PATH
-            NAMES Inc/stm32${FAMILY_L}xx_hal.h
-            PATHS "${STM32_HAL_${FAMILY}_PATH}" "${STM32_CUBE_${FAMILY}_PATH}/Drivers/STM32${FAMILY}xx_HAL_Driver"
-            NO_DEFAULT_PATH
-            )
-
-        get_list_hal_drivers(HAL_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH} "hal")
-        get_list_hal_drivers(HAL_LL_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH} "ll")
-        list(APPEND HAL_DRIVERS ${HAL_DRIVERS_${FAMILY}})
-        list(APPEND HAL_LL_DRIVERS ${HAL_LL_DRIVERS_${FAMILY}})
-
-        message(TRACE "FindHAL: append COMP ${COMP} to HAL_FIND_COMPONENTS_FAMILIES")
-        continue()
+        list(APPEND HAL_REQUESTED_FAMILIES ${COMP_U})
     else()
         list(APPEND HAL_FIND_COMPONENTS_UNHANDLED ${COMP})
     endif()
+endforeach()
+#For backward compatibility, providing no family must select all available families
+if(NOT HAL_REQUESTED_FAMILIES)
+    set(HAL_REQUESTED_FAMILIES ${STM32_SUPPORTED_FAMILIES_LONG_NAME})
+endif()
 
+foreach(COMP ${HAL_REQUESTED_FAMILIES})
+    string(TOLOWER ${COMP} COMP_L)
+    string(TOUPPER ${COMP} COMP_U)
+    string(REGEX MATCH "^STM32([FGHLMUW]P?[0-9BL])([0-9A-Z][0-9M][A-Z][0-9A-Z])?_?(M0PLUS|M4|M7)?.*$" COMP_U ${COMP_U})
+     if(CMAKE_MATCH_1)
+         set(FAMILY ${CMAKE_MATCH_1})
+         list(APPEND HAL_FIND_COMPONENTS_FAMILIES ${COMP_U})
+     else()
+         message(FATAL_ERROR "\"${COMP}\" is not a valid FAMILY")
+     endif()
+
+    string(TOLOWER ${FAMILY} FAMILY_L)
+    find_path(HAL_${FAMILY}_PATH
+        NAMES Inc/stm32${FAMILY_L}xx_hal.h
+        PATHS "${STM32_HAL_${FAMILY}_PATH}" "${STM32_CUBE_${FAMILY}_PATH}/Drivers/STM32${FAMILY}xx_HAL_Driver"
+        NO_DEFAULT_PATH
+        )
+
+    get_list_hal_drivers(HAL_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH} "hal")
+    get_list_hal_drivers(HAL_LL_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH} "ll")
+    list(APPEND HAL_DRIVERS ${HAL_DRIVERS_${FAMILY}})
+    list(APPEND HAL_LL_DRIVERS ${HAL_LL_DRIVERS_${FAMILY}})
+
+    message(TRACE "FindHAL: append COMP ${COMP} to HAL_FIND_COMPONENTS_FAMILIES")
 endforeach()
 
 list(REMOVE_DUPLICATES HAL_DRIVERS)
