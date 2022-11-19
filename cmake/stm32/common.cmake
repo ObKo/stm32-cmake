@@ -14,6 +14,12 @@ foreach(FAMILY ${STM32_SUPPORTED_FAMILIES_LONG_NAME})
 endforeach()
 list(REMOVE_DUPLICATES STM32_SUPPORTED_FAMILIES_SHORT_NAME)
 
+
+if(NOT STM32_TARGET_TRIPLET)
+    set(STM32_TARGET_TRIPLET "arm-none-eabi")
+    message(STATUS "No STM32_TARGET_TRIPLET specified, using default: " ${STM32_TARGET_TRIPLET})
+endif()
+
 if(NOT STM32_TOOLCHAIN_PATH)
     if(DEFINED ENV{STM32_TOOLCHAIN_PATH})
         message(STATUS "Detected toolchain path STM32_TOOLCHAIN_PATH in environmental variables: ")
@@ -33,16 +39,40 @@ if(NOT STM32_TOOLCHAIN_PATH)
     file(TO_CMAKE_PATH "${STM32_TOOLCHAIN_PATH}" STM32_TOOLCHAIN_PATH)
 endif()
 
-if(NOT STM32_TARGET_TRIPLET)
-    set(STM32_TARGET_TRIPLET "arm-none-eabi")
-    message(STATUS "No STM32_TARGET_TRIPLET specified, using default: " ${STM32_TARGET_TRIPLET})
-endif()
+function(stm32_autoset_toolchain_bin_path STM32_TARGET_TRIPLET RESULT_VAL_TOOLCHAIN_BIN_PATH)
+# set the OS utility to find a program path
+    if(MINGW OR CYGWIN OR WIN32)
+        set(OS_UTIL_SEARCH_CMD where)
+    elseif(UNIX OR APPLE)
+        set(OS_UTIL_SEARCH_CMD which)
+    endif()
+
+    execute_process(
+        COMMAND ${OS_UTIL_SEARCH_CMD} "${STM32_TARGET_TRIPLET}-gcc"
+        RESULT_VARIABLE STATUS
+        OUTPUT_VARIABLE RES_PATH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    get_filename_component(RES_PATH ${RES_PATH} DIRECTORY)
+    message(STATUS "RES_PATH" ${RES_PATH})
+
+    # status is either a string or a return code in case of error, check both
+    if(STATUS AND NOT STATUS EQUAL 0)
+        # assign default position
+        set(RESULT_VAL_TOOLCHAIN_BIN_PATH "/usr/bin")
+    else()
+        set(RESULT_VAL_TOOLCHAIN_BIN_PATH ${RES_PATH})
+    endif()
+endfunction()
 
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR arm)
 
 set(TOOLCHAIN_SYSROOT  "${STM32_TOOLCHAIN_PATH}/${STM32_TARGET_TRIPLET}")
-set(TOOLCHAIN_BIN_PATH "${STM32_TOOLCHAIN_PATH}/bin")
+#set(TOOLCHAIN_BIN_PATH "${STM32_TOOLCHAIN_PATH}/bin")
+# find automatically a bin path otherwise use default
+stm32_autoset_toolchain_bin_path(${STM32_TARGET_TRIPLET} TOOLCHAIN_BIN_PATH)
 set(TOOLCHAIN_INC_PATH "${STM32_TOOLCHAIN_PATH}/${STM32_TARGET_TRIPLET}/include")
 set(TOOLCHAIN_LIB_PATH "${STM32_TOOLCHAIN_PATH}/${STM32_TARGET_TRIPLET}/lib")
 
