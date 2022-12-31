@@ -20,18 +20,11 @@ jobs:
     - name: Install ARM toolchain
       run: sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi 
 
-    - name: Create build directory for tests/fetch
-      run: cmake -E make_directory ${{runner.workspace}}/tests/fetch/build
-
-    - name: Configure tests/fetch
+    - name: Test fetch
       shell: bash
-      working-directory: ${{runner.workspace}}/tests/fetch/build
-      run: cmake -DTEST_FAMILIES=${{ matrix.family }} $GITHUB_WORKSPACE/tests/fetch/
-
-    - name: Build tests/fetch
-      working-directory: ${{runner.workspace}}/tests/fetch/build
-      shell: bash
-      run: cmake --build . --config $BUILD_TYPE
+      run: |
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -S $GITHUB_WORKSPACE/tests/fetch/ -B ${{runner.workspace}}/tests/fetch/build
+          cmake --build ${{runner.workspace}}/tests/fetch/build --config $BUILD_TYPE --
 
     - name: Create build directory for tests/cmsis
       run: cmake -E make_directory ${{runner.workspace}}/tests/cmsis/build
