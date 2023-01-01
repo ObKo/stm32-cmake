@@ -22,19 +22,19 @@ jobs:
     - name: Test fetch
       shell: bash
       run: |
-          cmake -DTEST_FAMILIES=${{ matrix.family }} -S $GITHUB_WORKSPACE/tests/fetch/ -B ${{runner.workspace}}/tests/fetch/build
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -S $GITHUB_WORKSPACE/tests/fetch/ -B ${{runner.workspace}}/tests/fetch/build --log-level=TRACE
           cmake --build ${{runner.workspace}}/tests/fetch/build --config $BUILD_TYPE --
 
     - name: Test HAL
       shell: bash
       run: |
-          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -S $GITHUB_WORKSPACE/tests/hal/ -B ${{runner.workspace}}/tests/hal/build
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -S $GITHUB_WORKSPACE/tests/hal/ -B ${{runner.workspace}}/tests/hal/build --log-level=TRACE
           cmake --build ${{runner.workspace}}/tests/hal/build --config $BUILD_TYPE --
 
 
     - name: Test CMSIS
       shell: bash
       run: |
-          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -S $GITHUB_WORKSPACE/tests/cmsis/ -B ${{runner.workspace}}/tests/cmsis/build
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -S $GITHUB_WORKSPACE/tests/cmsis/ -B ${{runner.workspace}}/tests/cmsis/build --log-level=TRACE
           cmake --build ${{runner.workspace}}/tests/cmsis/build --config $BUILD_TYPE --
       if: ${{ matrix.family != 'MP1' }}
