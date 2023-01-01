@@ -33,19 +33,9 @@ jobs:
           cmake --build ${{runner.workspace}}/tests/hal/build --config $BUILD_TYPE --
 
 
-    - name: Create build directory for tests/cmsis
-      run: cmake -E make_directory ${{runner.workspace}}/tests/cmsis/build
-      if: ${{ matrix.family != 'MP1' }}
-
-    - name: Configure tests/cmsis
+    - name: Test CMSIS
       shell: bash
-      working-directory: ${{runner.workspace}}/tests/cmsis/build
-      run: cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE $GITHUB_WORKSPACE/tests/cmsis/
+      run: |
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -S $GITHUB_WORKSPACE/tests/cmsis/ -B ${{runner.workspace}}/tests/cmsis/build
+          cmake --build ${{runner.workspace}}/tests/cmsis/build --config $BUILD_TYPE --
       if: ${{ matrix.family != 'MP1' }}
-
-    - name: Build tests/cmsis
-      working-directory: ${{runner.workspace}}/tests/cmsis/build
-      shell: bash
-      run: cmake --build . --config $BUILD_TYPE
-      if: ${{ matrix.family != 'MP1' }}
-
