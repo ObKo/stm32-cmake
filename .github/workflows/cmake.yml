@@ -20,18 +20,21 @@ jobs:
       run: sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi 
 
     - name: Test fetch
+      working-directory: $GITHUB_WORKSPACE/tests/fetch
       run: |
-          cmake -DTEST_FAMILIES=${{ matrix.family }} -S $GITHUB_WORKSPACE/tests/fetch/ -B ${{runner.workspace}}/tests/fetch/build --log-level=TRACE
-          cmake --build ${{runner.workspace}}/tests/fetch/build --config $BUILD_TYPE --
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -B build --log-level=TRACE
+          cmake --build build --config $BUILD_TYPE --
 
     - name: Test HAL
+      working-directory: $GITHUB_WORKSPACE/tests/hal
       run: |
-          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -S $GITHUB_WORKSPACE/tests/hal/ -B ${{runner.workspace}}/tests/hal/build --log-level=TRACE
-          cmake --build ${{runner.workspace}}/tests/hal/build --config $BUILD_TYPE --
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -B build --log-level=TRACE
+          cmake --build build --config $BUILD_TYPE --
 
 
     - name: Test CMSIS
-      run: |
-          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -S $GITHUB_WORKSPACE/tests/cmsis/ -B ${{runner.workspace}}/tests/cmsis/build --log-level=TRACE
-          cmake --build ${{runner.workspace}}/tests/cmsis/build --config $BUILD_TYPE --
+      working-directory: $GITHUB_WORKSPACE/tests/cmsis
       if: ${{ matrix.family != 'MP1' }}
+      run: |
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -B build --log-level=TRACE
+          cmake --build build --config $BUILD_TYPE --
