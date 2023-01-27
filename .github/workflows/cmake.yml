@@ -28,7 +28,7 @@ jobs:
     - name: Test HAL
       working-directory: $GITHUB_WORKSPACE/tests/hal
       run: |
-          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -B build --log-level=TRACE
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -DSTM32_CUBE_${{matrix.family}}_PATH=$GITHUB_WORKSPACE/tests/fetch/.deps/stm32-hal-f0-src -B build --log-level=TRACE
           cmake --build build --config $BUILD_TYPE --
 
 
@@ -36,5 +36,5 @@ jobs:
       working-directory: $GITHUB_WORKSPACE/tests/cmsis
       if: ${{ matrix.family != 'MP1' }}
       run: |
-          cmake -DTEST_FAMILIES=${{ matrix.family }} -DFETCH_ST_SOURCES=TRUE -B build --log-level=TRACE
+          cmake -DTEST_FAMILIES=${{ matrix.family }} -DSTM32_CUBE_${{matrix.family}}_PATH=$GITHUB_WORKSPACE/tests/fetch/.deps/stm32-cmsis-f0-src -B build --log-level=TRACE
           cmake --build build --config $BUILD_TYPE --
