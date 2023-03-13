@@ -33,20 +33,25 @@ extern "C" {
 /* ########################## Module Selection ############################## */
 /**
   * @brief This is the list of modules to be used in the HAL driver
+  * 
+  * `stm32-cmake` automatically defines the `HAL_*_MODULE_ENABLED` variables
+  * when a driver is added to a project using `target_link_libraries`, so they
+  * don't need to be defined here
+  *
   */
 #define HAL_MODULE_ENABLED
 // #define HAL_ADC_MODULE_ENABLED
 // #define HAL_CAN_MODULE_ENABLED
 // #define HAL_CAN_LEGACY_MODULE_ENABLED
 // #define HAL_CEC_MODULE_ENABLED
-#define HAL_CORTEX_MODULE_ENABLED
+// #define HAL_CORTEX_MODULE_ENABLED
 // #define HAL_CRC_MODULE_ENABLED
 // #define HAL_DAC_MODULE_ENABLED
-#define HAL_DMA_MODULE_ENABLED
+// #define HAL_DMA_MODULE_ENABLED
 // #define HAL_ETH_MODULE_ENABLED
 // #define HAL_EXTI_MODULE_ENABLED
-#define HAL_FLASH_MODULE_ENABLED
-#define HAL_GPIO_MODULE_ENABLED
+// #define HAL_FLASH_MODULE_ENABLED
+// #define HAL_GPIO_MODULE_ENABLED
 // #define HAL_HCD_MODULE_ENABLED
 // #define HAL_I2C_MODULE_ENABLED
 // #define HAL_I2S_MODULE_ENABLED
@@ -57,7 +62,7 @@ extern "C" {
 // #define HAL_PCCARD_MODULE_ENABLED
 // #define HAL_PCD_MODULE_ENABLED
 // #define HAL_PWR_MODULE_ENABLED
-#define HAL_RCC_MODULE_ENABLED
+// #define HAL_RCC_MODULE_ENABLED
 // #define HAL_RTC_MODULE_ENABLED
 // #define HAL_SD_MODULE_ENABLED
 // #define HAL_SMARTCARD_MODULE_ENABLED

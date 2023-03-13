@@ -158,7 +158,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 HAL module will search all drivers supported by family and create the following targets:
 
 * `HAL::STM32::<FAMILY>` (e.g. `HAL::STM32::F4`) - common HAL source, depends on `CMSIS::STM32::<FAMILY>`
-* `HAL::STM32::<FAMILY>::<DRIVER>` (e.g. `HAL::STM32::F4::GPIO`) - HAL driver <DRIVER>, depends on `HAL::STM32::<FAMILY>`
+* `HAL::STM32::<FAMILY>::<DRIVER>_ENABLE` (e.g. `HAL::STM32::F4::GPIO_ENABLE`) - Enables HAL driver <DRIVER>, by setting the `HAL_<DRIVER>_MODULE_ENABLED` macro.
+* `HAL::STM32::<FAMILY>::<DRIVER>` (e.g. `HAL::STM32::F4::GPIO`) - HAL driver <DRIVER>, depends on `HAL::STM32::<FAMILY>` and `HAL::STM32::<FAMILY>::<DRIVER>_ENABLE`.  Causes the source file for the driver to be built.
 * `HAL::STM32::<FAMILY>::<DRIVER>Ex` (e.g. `HAL::STM32::F4::ADCEx`) - HAL Extension driver , depends on `HAL::STM32::<FAMILY>::<DRIVER>`
 * `HAL::STM32::<FAMILY>::LL_<DRIVER>` (e.g. `HAL::STM32::F4::LL_ADC`) - HAL LL (Low-Level) driver , depends on `HAL::STM32::<FAMILY>`
 
@@ -170,6 +171,7 @@ Here is typical usage:
 add_executable(stm32-blinky-f4 blinky.c stm32f4xx_hal_conf.h)
 target_link_libraries(stm32-blinky-f4
     HAL::STM32::F4::RCC
+    HAL::STM32::F4::FLASH_ENABLE
     HAL::STM32::F4::GPIO
     HAL::STM32::F4::CORTEX
     CMSIS::STM32::F407VG
