@@ -29,6 +29,31 @@ function(get_list_hal_drivers out_list_hal_drivers hal_drivers_path hal_driver_t
     set(${out_list_hal_drivers} ${filtered_files} PARENT_SCOPE)
 endfunction()
 
+# This function removes excluded drivers from the drivers_list
+#
+# drivers_list                  name of HAL drivers list
+#
+function(drop_excluded_hal_drivers drivers_list_name)
+    if(DEFINED EXCLUDED_${drivers_list_name}_OVERRIDE)
+        # User has overidden excluded drivers list
+        set(excluded_drivers_list_name "EXCLUDED_${drivers_list_name}_OVERRIDE")
+    else()
+        # User has not overridden excluded drivers list
+        # Fall back on default excluded drivers list
+        set(excluded_drivers_list_name "EXCLUDED_${drivers_list_name}")
+    endif()
+
+    set(excluded_drivers_list ${${excluded_drivers_list_name}})
+    if(excluded_drivers_list)
+        message(STATUS "Ignoring drivers listed in ${excluded_drivers_list_name}: ${excluded_drivers_list}")
+        foreach(excluded_driver ${excluded_drivers_list})
+            string(TOLOWER ${excluded_driver} excluded_driver)
+            list(REMOVE_ITEM ${drivers_list_name} ${excluded_driver})
+        endforeach()
+        # Update the original drivers list in the parent scope
+        set(${drivers_list_name} ${${drivers_list_name}} PARENT_SCOPE)
+    endif()
+endfunction()
 ################################################################################
 # Checking the parameters provided to the find_package(HAL ...) call
 # The expected parameters are families and or drivers in *any orders*
@@ -75,9 +100,16 @@ foreach(family_comp ${HAL_FIND_COMPONENTS_FAMILIES})
         set(HAL_${family_comp}_FOUND TRUE)
     endif()
     if(CMAKE_MATCH_1) #Matches the family part of the provided STM32<FAMILY>[..] component
+        # HAL drivers
         get_list_hal_drivers(HAL_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH} "hal")
+        drop_excluded_hal_drivers(HAL_DRIVERS_${FAMILY})
+
         get_list_hal_drivers(HAL_EX_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH}  "ex")
+        drop_excluded_hal_drivers(HAL_EX_DRIVERS_${FAMILY})
+
         get_list_hal_drivers(HAL_LL_DRIVERS_${FAMILY} ${HAL_${FAMILY}_PATH} "ll")
+        drop_excluded_hal_drivers(HAL_LL_DRIVERS_${FAMILY})
+
         list(APPEND HAL_DRIVERS ${HAL_DRIVERS_${FAMILY}})
         list(APPEND HAL_LL_DRIVERS ${HAL_LL_DRIVERS_${FAMILY}})
     else()

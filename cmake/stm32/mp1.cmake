@@ -18,6 +18,12 @@ set(STM32_MP1_CCRAM_SIZES
     0K 0K
     0K 0K)
 
+# The MDIOS module is broken in STM32CubeMP1 up to and including v. 1.6.0
+# Exclude it by default
+set(EXCLUDED_HAL_DRIVERS_MP1
+    MDIOS
+)
+
 stm32_util_create_family_targets(MP1 M4)
 
 target_compile_options(STM32::MP1::M4 INTERFACE -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard)
