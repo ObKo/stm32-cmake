@@ -19,7 +19,7 @@ endif()
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
 
-set(HAL_COMP_LIST RCC GPIO CORTEX)
+set(HAL_COMP_LIST RCC GPIO CORTEX FLASH)
 set(CMSIS_COMP_LIST "")
 
 if(BLINKY_F4_EXAMPLE)
@@ -53,6 +53,7 @@ find_package(HAL COMPONENTS "${HAL_COMP_LIST}" REQUIRED)
 if(BLINKY_F4_EXAMPLE)
     add_executable(stm32-blinky-f4 ${MAIN_SOURCE_FILE} stm32f4xx_hal_conf.h)
     target_link_libraries(stm32-blinky-f4
+        HAL::STM32::F4::FLASH_ENABLE
         HAL::STM32::F4::RCC
         HAL::STM32::F4::GPIO
         HAL::STM32::F4::CORTEX
@@ -66,6 +67,7 @@ endif()
 if(BLINKY_F1_EXAMPLE)
     add_executable(stm32-blinky-f1 ${MAIN_SOURCE_FILE} stm32f1xx_hal_conf.h)
     target_link_libraries(stm32-blinky-f1
+        HAL::STM32::F1::FLASH_ENABLE
         HAL::STM32::F1::RCC
         HAL::STM32::F1::GPIO
         HAL::STM32::F1::CORTEX
@@ -79,6 +81,7 @@ endif()
 if(BLINKY_L0_EXAMPLE)
     add_executable(stm32-blinky-l0 ${MAIN_SOURCE_FILE} stm32l0xx_hal_conf.h)
     target_link_libraries(stm32-blinky-l0
+        HAL::STM32::L0::FLASH_ENABLE
         HAL::STM32::L0::RCC
         HAL::STM32::L0::GPIO
         HAL::STM32::L0::CORTEX
