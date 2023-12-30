@@ -336,7 +336,7 @@ endfunction()
 
 function(stm32_add_linker_script TARGET VISIBILITY SCRIPT)
     get_filename_component(SCRIPT "${SCRIPT}" ABSOLUTE)
-    target_link_options(${TARGET} ${VISIBILITY} -T "${SCRIPT}")
+    target_link_options(${TARGET} ${VISIBILITY} "-Wl,--script=${SCRIPT}")
 
     get_target_property(TARGET_TYPE ${TARGET} TYPE)
     if(TARGET_TYPE STREQUAL "INTERFACE_LIBRARY")
@@ -350,6 +350,24 @@ function(stm32_add_linker_script TARGET VISIBILITY SCRIPT)
         set(LINK_DEPENDS "${SCRIPT}")
     endif()
 
+    set_target_properties(${TARGET} PROPERTIES ${INTERFACE_PREFIX}LINK_DEPENDS "${LINK_DEPENDS}")
+endfunction()
+
+function(stm32_add_default_linker_script TARGET VISIBILITY SCRIPT)
+    get_filename_component(SCRIPT "${SCRIPT}" ABSOLUTE)
+    target_link_options(${TARGET} ${VISIBILITY} "-Wl,--default-script=${SCRIPT}")
+
+    get_target_property(TARGET_TYPE ${TARGET} TYPE)
+    if(TARGET_TYPE STREQUAL "INTERFACE_LIBRARY")
+        set(INTERFACE_PREFIX "INTERFACE_")
+    endif()
+
+    get_target_property(LINK_DEPENDS ${TARGET} ${INTERFACE_PREFIX}LINK_DEPENDS)
+    if(LINK_DEPENDS)
+        list(APPEND LINK_DEPENDS "${SCRIPT}")
+    else()
+        set(LINK_DEPENDS "${SCRIPT}")
+    endif()
 
     set_target_properties(${TARGET} PROPERTIES ${INTERFACE_PREFIX}LINK_DEPENDS "${LINK_DEPENDS}")
 endfunction()

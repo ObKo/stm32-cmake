@@ -106,7 +106,7 @@ function(cmsis_generate_default_linker_script FAMILY DEVICE CORE)
     endif()
     add_custom_target(CMSIS_LD_${DEVICE}${CORE_U} DEPENDS "${OUTPUT_LD_FILE}")
     add_dependencies(CMSIS::STM32::${DEVICE}${CORE_C} CMSIS_LD_${DEVICE}${CORE_U})
-    stm32_add_linker_script(CMSIS::STM32::${DEVICE}${CORE_C} INTERFACE "${OUTPUT_LD_FILE}")
+    stm32_add_default_linker_script(CMSIS::STM32::${DEVICE}${CORE_C} INTERFACE "${OUTPUT_LD_FILE}")
 endfunction() 
 
 foreach(COMP ${CMSIS_FIND_COMPONENTS_FAMILIES})
