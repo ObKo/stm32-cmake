@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/stm32_gcc.cmake)
 
+set(STM32_CUBE_F4_PATH "C:\\GIT\\STM32CubeF4")
+
 # Configure here which STM32 target(s) to build
 option(BLINKY_F4_EXAMPLE "Compile F4 example" ON)
 option(BLINKY_F1_EXAMPLE "Compile F1 example" OFF)
@@ -19,7 +21,7 @@ endif()
 set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
 
-set(HAL_COMP_LIST RCC GPIO CORTEX)
+set(HAL_COMP_LIST RCC GPIO CORTEX PWR)
 set(CMSIS_COMP_LIST "")
 
 if(BLINKY_F4_EXAMPLE)
@@ -51,15 +53,26 @@ find_package(HAL COMPONENTS "${HAL_COMP_LIST}" REQUIRED)
 
 # STM32F4-Discovery
 if(BLINKY_F4_EXAMPLE)
-    add_executable(stm32-blinky-f4 ${MAIN_SOURCE_FILE} stm32f4xx_hal_conf.h)
-    target_link_libraries(stm32-blinky-f4
+    add_executable(stm32-blinky-f4 ${MAIN_SOURCE_FILE} )
+    
+    target_link_libraries(stm32-blinky-f4 PRIVATE hal_lib)
+
+    add_library(hal_lib STATIC stm32f4xx_hal_conf.h)
+    target_link_libraries(hal_lib PUBLIC
         HAL::STM32::F4::RCC
         HAL::STM32::F4::GPIO
         HAL::STM32::F4::CORTEX
+        HAL::STM32::F4::PWR
         CMSIS::STM32::F407VG
         STM32::NoSys
     )
+    target_compile_options(stm32-blinky-f4 PRIVATE  -Wall -Wundef -Wextra)
+    
     stm32_print_size_of_target(stm32-blinky-f4)
+
+    #set_source_files_properties(blinky.c PROPERTIES COMPILE_FLAGS -Wall -Wundef -Wextra)
+    
+
 endif()
 
 # STM32VL-Discovery
