@@ -7,7 +7,6 @@ get_filename_component(STM32_CMAKE_DIR ${CMAKE_CURRENT_LIST_FILE} DIRECTORY)
 list(APPEND CMAKE_MODULE_PATH ${STM32_CMAKE_DIR})
 
 include(stm32/common)
-include(stm32/devices)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 

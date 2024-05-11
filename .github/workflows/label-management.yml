@@ -1,0 +1,29 @@
+name: Manage Labels
+
+run-name: "Dynamically create new Labels"
+
+on:
+  push
+
+jobs:
+  CreateProjectManagementLabel:
+    strategy:
+      matrix: 
+        label: [ missing-devices, dependency-update ]
+      fail-fast: false 
+    uses: ./.github/workflows/create-label.yml
+    with:
+      labelname: ${{ matrix.label }}
+
+  RetrieveTargetsMatrix:
+    uses: ./.github/workflows/create-matrix.yml
+  
+  CreateFamilyLabel:
+    needs: RetrieveTargetsMatrix
+    strategy:
+      matrix: ${{ fromJSON(needs.RetrieveTargetsMatrix.outputs.matrix) }}
+      fail-fast: false
+    uses: ./.github/workflows/create-label.yml
+    with:
+      labelname: ${{ matrix.family }}
+      color: "FFD200"

@@ -1,0 +1,85 @@
+name: Missing device check
+
+run-name: "Periodic check for new devices"
+
+on:
+  schedule:
+    - cron:  '17 4 * * *'
+
+jobs:
+  RetrieveTargetsMatrix:
+    uses: ./.github/workflows/create-matrix.yml
+
+  CheckForMissingTargets:
+    runs-on: ubuntu-latest
+    needs: RetrieveTargetsMatrix
+    strategy:
+      matrix: ${{ fromJSON(needs.RetrieveTargetsMatrix.outputs.matrix) }}
+      fail-fast: false
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Print Job
+        run: echo "Looking for possible missing ${{ matrix.family }} devices"
+
+      - name: Get Serie (Family) number from ST website
+        id: get-ss-id
+        run: |
+          FAMILY_L=$(echo "${{ matrix.family }}" | tr '[:upper:]' '[:lower:]')
+          URL=https://www.st.com/en/microcontrollers-microprocessors/stm32${FAMILY_L}-series.html
+          serie=$(curl --request GET \
+            --silent --url ${URL} \
+            --header "User-Agent: Firefox/9000" \
+            | sed -rne "s@(.*)(data-associated-to=\")(SS[0-9]{4,})(\".*)@\3@p")
+          [[ -z "${serie}" ]] && echo "Failed to find serie " && exit 0       
+          echo "${{ matrix.family }} is ST ${serie} serie"
+          echo "SERIE=$serie" >> $GITHUB_OUTPUT
+
+      - name: Retrieve Serie (Family) JSON file
+        id: get-json-file
+        run: |
+          URL=https://www.st.com/bin/st/selectors/cxst/en.cxst-ps-grid.html/${{ steps.get-ss-id.outputs.SERIE }}.json
+          curl --request GET \
+            --silent --url ${URL} \
+            --header "User-Agent: Firefox/9000" >> data.json
+
+      - name: Get missing components list
+        id: get-missings
+        run: |
+          FAMILY_L=$(echo "${{ matrix.family }}" | tr '[:upper:]' '[:lower:]')
+          family_src_file=${GITHUB_WORKSPACE}/cmake/stm32/${FAMILY_L}.cmake
+          cat data.json | jq -r '.rows[].cells[0].value' | while read -r dev; do
+            d=${dev#*STM32}
+            if [ "0" -eq $(sed -rn "s@(\s+)(${d})@found@p" ${family_src_file} | wc -m) ]; then
+              echo "${dev} is missing from ${family_src_file}"
+              echo "- [ ] ${d}" >> missings
+            else
+              echo "${dev} found"
+            fi
+          done
+
+      - name: Manage issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LABELS="${{ matrix.family }},missing-devices"
+          existing=$(gh issue list \
+            --label "${LABELS}" \
+            --state open \
+            --json number \
+            --jq '.[0].number')
+          if [ ! -f missings ] && [ ! -z ${existing} ]; then
+            echo "Closing existing issue ${existing}"
+            gh issue close "${existing}" \
+              --comment "${{ matrix.family }} has all its devices supported now"
+          fi
+          if [ -f missings ] && [ -z ${existing} ]; then
+            echo "Creating issue to report missing devices"
+            BODY="Not supported yet devices list:"
+            BODY="${BODY}"$'\n'"$(cat missings)"
+            gh issue create \
+              --title "${{ matrix.family }} has devices not supported" \
+              --label "${LABELS}" \
+              --body "$BODY"
+          fi

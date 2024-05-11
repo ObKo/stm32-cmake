@@ -1,0 +1,33 @@
+name: MatrixCreator
+
+run-name: "Creates supported target matrix for other jobs"
+
+on:
+  workflow_call:
+    inputs:
+      labelname:
+        required: true
+        type: string
+      color:
+        required: false
+        default: "03234B"
+        type: string
+
+jobs:
+  CreateLabel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Print Job
+        run: echo "Create ${{ inputs.labelname }} labels"
+
+      - name: Create tag if doesn't exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          exists=$(gh label list --search ${{ inputs.labelname }} --json name --jq '.[0].name' | wc -l)
+          if [ "x$exists" == "x0" ]; then
+            gh label create ${{ inputs.labelname }} --color ${{ inputs.color }}
+          fi

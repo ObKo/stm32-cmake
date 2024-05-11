@@ -1,0 +1,103 @@
+name: Dependency Check
+
+run-name: "Periodic check for dependency updates"
+
+on:
+  schedule:
+    - cron:  '17 4 * * *'
+
+jobs:
+  RetrieveTargetsMatrix:
+    uses: ./.github/workflows/create-matrix.yml
+
+  CheckForSTReposRelease:
+    runs-on: ubuntu-latest
+    needs: RetrieveTargetsMatrix
+    strategy:
+      matrix: ${{ fromJSON(needs.RetrieveTargetsMatrix.outputs.matrix) }}
+      fail-fast: false
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Print Job
+        run: echo "Updating ${{ matrix.family }} Family with latest ST tags"
+
+      - name: Get Cube version
+        id: get-latest-cube
+        run: |
+          http_code=$(curl --request GET \
+            --silent --write-out "%{http_code}" \
+            --url "https://api.github.com/repos/STMicroelectronics/STM32Cube${{matrix.family}}/tags" \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            -o body.json );
+          if [ "${http_code}" -ne "200" ]; then
+            echo "Failed (${http_code}) to get https://api.github.com/repos/STMicroelectronics/STM32Cube${{matrix.family}}/tags";
+            exit 1;
+          else
+            latest_cube_version=$(jq '.[0].name' body.json | sed -rn 's@\"@@gp' );
+            echo "Latest Cube Version: ${latest_cube_version}";
+          fi
+          echo "VERSION=${latest_cube_version}" >> $GITHUB_OUTPUT
+
+      - name: Get CMSIS version
+        id: get-latest-cmsis
+        run: |
+          FAMILY_L=$(echo "${{matrix.family}}" | tr '[:upper:]' '[:lower:]');
+          http_code=$(curl --request GET \
+            --silent --write-out "%{http_code}" \
+            --url "https://api.github.com/repos/STMicroelectronics/cmsis_device_${FAMILY_L}/tags" \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            -o body.json ); \
+          if [ "${http_code}" -ne "200" ]; then
+            echo "Failed (${http_code}) to get https://api.github.com/repos/STMicroelectronics/cmsis_device_${FAMILY_L}/tags";
+            echo "Assume we can use the one from cube";
+            latest_cmsis_version="cube";
+          else
+            latest_cmsis_version=$(jq '.[0].name' body.json | sed -rn 's@\"@@gp' );
+          fi
+          echo "Latest CMSIS Version: ${latest_cmsis_version}";
+          echo "VERSION=${latest_cmsis_version}" >> $GITHUB_OUTPUT
+
+      - name: Get HAL version
+        id: get-latest-hal
+        run: |
+          FAMILY_L=$(echo "${{matrix.family}}" | tr '[:upper:]' '[:lower:]');
+          http_code=$(curl --request GET \
+            --silent --write-out "%{http_code}" \
+            --url "https://api.github.com/repos/STMicroelectronics/stm32${FAMILY_L}xx_hal_driver/tags" \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            -o body.json ); \
+          if [ "${http_code}" -ne "200" ]; then
+            echo "Failed (${http_code}) to get https://api.github.com/repos/STMicroelectronics/stm32${FAMILY_L}xx_hal_driver/tags";
+            echo "Assume we can use the one from cube";
+            latest_hal_version="cube";
+          else
+            latest_hal_version=$(jq '.[0].name' body.json | sed -rn 's@\"@@gp' );
+          fi
+          echo "Latest HAL Version: ${latest_hal_version}";
+          echo "VERSION=${latest_hal_version}" >> $GITHUB_OUTPUT
+
+      - name: Update family file with latest values
+        run: |
+          family_src_file=${GITHUB_WORKSPACE}/cmake/stm32/$(echo "${{ matrix.family }}" | tr '[:upper:]' '[:lower:]').cmake
+          sed -ri 's@(set\(CUBE_${{ matrix.family }}_VERSION(\s+))(.*)(\))@\1${{ steps.get-latest-cube.outputs.VERSION }}\4@g' $family_src_file
+          sed -ri 's@(set\(CMSIS_${{ matrix.family }}_VERSION(\s+))(.*)(\))@\1${{ steps.get-latest-cmsis.outputs.VERSION }}\4@g' $family_src_file
+          sed -ri 's@(set\(HAL_${{ matrix.family }}_VERSION(\s+))(.*)(\))@\1${{ steps.get-latest-hal.outputs.VERSION }}\4@g' $family_src_file
+
+      - name: Create Dependancy update Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: cmake/stm32/
+          commit-message: Update ${{ matrix.family }} dependencies
+          branch: maintenance/${{ matrix.family }}-dependencies-update
+          delete-branch: true
+          title: Update ${{ matrix.family }} dependencies
+          labels: dependency-update, ${{ matrix.family }}
+          body: |
+            Update ${{ matrix.family }} to use latest ST Repos
