@@ -7,11 +7,14 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+  RetrieveTargetsMatrix:
+    uses: ./.github/workflows/create-matrix.yml
+
   test-ubuntu:
     runs-on: ubuntu-20.04
+    needs: RetrieveTargetsMatrix
     strategy:
-      matrix:
-        family: [C0, F0, F1, F2, F3, F4, F7, G0, G4, H5, H7, L0, L1, L4, L5, U0, U5, WB, WL, MP1]
+      matrix: ${{ fromJSON(needs.RetrieveTargetsMatrix.outputs.matrix) }}
       fail-fast: false
 
     steps:
