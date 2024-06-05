@@ -19,23 +19,12 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Get uppercase no-extension ordered file names
-        id: find-files
+      - name: Create matrix
+        id: create-matrix
         run: |
-          files=$(find cmake/stm32/ -name '*.cmake' -exec sh -c "basename {} | cut -f1 -d '.' | tr '[:lower:]' '[:upper:]'" \; | sort)
-          echo "files=\"${files[@]}\"" >> $GITHUB_OUTPUT
-
-      - name: Filter out non family files
-        id: get-famillies
-        run: |
-          files=${{ steps.find-files.outputs.files }}
+          files=$(find cmake/stm32/ -name '*.cmake' -exec sh -c "basename {} | cut -f1 -d '.' | tr '[:lower:]' '[:upper:]'" \;  | sort)
           deletes="COMMON DEVICES LINKER_LD"
           for del in $deletes; do
             files=(${files[@]/$del})
           done
-          echo "files=\"${files[@]\"" >> $GITHUB_OUTPUT
-
-      - name: Create matrix
-        id: create-matrix
-        run: |
-          echo "matrix={\"family\":$(jq --compact-output --null-input '$ARGS.positional' --args -- ${{ steps.get-famillies.outputs.files }})}" >> $GITHUB_OUTPUT
+          echo "matrix={\"family\":$(jq --compact-output --null-input '$ARGS.positional' --args -- ${files[@]})}" >> $GITHUB_OUTPUT
