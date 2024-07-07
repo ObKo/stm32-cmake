@@ -15,7 +15,8 @@ if(FETCH_ST_SOURCES)
     stm32_fetch_cmsis(${TEST_FAMILIES})
 endif()
 
-find_package(CMSIS REQUIRED)
+list(TRANSFORM TEST_FAMILIES PREPEND STM32 OUTPUT_VARIABLE TEST_FAMILIES_LONG_NAMES)
+find_package(CMSIS COMPONENTS "${TEST_FAMILIES_LONG_NAMES}" REQUIRED)
 
 set(SOURCES main.c)
 
@@ -34,7 +35,7 @@ foreach(FAMILY ${TEST_FAMILIES})
             add_executable(cmsis-test-${DEVICE} ${SOURCES})
             target_link_libraries(cmsis-test-${DEVICE} CMSIS::STM32::${DEVICE} STM32::NoSys)
         else()
-            stm32_get_cores(CORES FAMILY ${FAMILY} DEVICE ${DEVICE})
+            stm32_get_cores(DEV_CORES FAMILY ${FAMILY} DEVICE ${DEVICE})
             foreach(CORE ${DEV_CORES})
                 stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} FLASH SIZE FLASH_SIZE)
                 stm32_get_memory_info(FAMILY ${FAMILY} DEVICE ${DEVICE} CORE ${CORE} RAM SIZE RAM_SIZE)
