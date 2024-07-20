@@ -39,6 +39,11 @@ It uses cmake and GCC, along with newlib (libc), STM32Cube. Supports C0 F0 F1 F2
    You can opt to use the FreeRTOS CMSIS implementation provided by the Cube repository by supplying
    `USE_CMSIS_RTOS=ON` or `USE_CMSIS_RTOS_V2` to CMake.
 
+The `lwip` support does not have a dedicated example because most STM devices have different PHYs
+and/or there is machine and linker script specific code which makes it difficult to create a
+generic example. You can find an UDP echo server application for the H743ZI board
+[here](https://github.com/robamu-org/stm32-cmake-projects).
+
 # Usage
 
 First of all you need to configure toolchain and library paths using CMake variables. There are
@@ -317,3 +322,30 @@ Other FreeRTOS libraries, with `FREERTOS_NAMESPACE` being set as specified in th
 * `${FREERTOS_NAMESPACE}::StreamBuffer` - stream buffer (`stream_buffer.c`)
 * `${FREERTOS_NAMESPACE}::Timers` - timers (`timers.c`)
 * `${FREERTOS_NAMESPACE}::Heap::<N>` - heap implementation (`heap_<N>.c`), `<N>`: [1-5]
+
+## <a id="lwip"></a> LwIP
+
+[cmake/FindLwIP](cmake/FindLwIP.cmake) - finds LwIP sources in STM32Cube repository and format them
+as `IMPORTED` targets. This requires a `lwipopts.h` in the application include path to work.
+If the Netconn or Socket API is used, the CMSIS support needs to be linked like specified in
+the [FreeRTOS section](#freertos).
+
+Available LwIP libraries:
+
+* `LwIP::IPv4` - IPv4 support
+* `LwIP::IPv6` - IPv6 support
+* `LwIP::SYS` - System support (`sys_arch.c`)
+* `LwIP::API` - Support for Netconn and Socket API. Will also link `LwIP::SYS` automatically
+* `LwIP::NETIF` - Netif sources support
+
+Typical usage when using Raw API to implement a simple UDP echoserver
+
+```cmake
+find_package(LwIP REQUIRED)
+target_link_libraries(${TARGET_NAME} PRIVATE
+    ...
+    LwIP
+    LwIP::IPv4
+    LwIP::NETIF
+)
+```
