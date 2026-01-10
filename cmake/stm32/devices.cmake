@@ -159,9 +159,26 @@ macro(stm32_pretty_print_dev_list FAMILIES STM_DEVICES)
    endif()
 endmacro()
 
-
-
 include(FetchContent)
+
+set(CMSIS_DEFAULT_VERSION "5.6.0") 
+set(CMSIS_CUSTOM_VERSION "" CACHE STRING "Custom CMSIS version")
+
+if(CMSIS_CUSTOM_VERSION)
+    set(CMSIS_VERSION_TO_FETCH ${CMSIS_CUSTOM_VERSION})
+else()
+    set(CMSIS_VERSION_TO_FETCH ${CMSIS_DEFAULT_VERSION})
+endif()
+
+message(STATUS "Fetching CMSIS version: ${CMSIS_VERSION_TO_FETCH}")
+
+if(FETCH_FAILED)
+    message(FATAL_ERROR 
+        "Could not find CMSIS version '${CMSIS_VERSION_TO_FETCH}'. "
+        "Verify if the version exists at https://github.com/STMicroelectronics/cmsis-core/tags"
+        "Example: cmake -DCMSIS_CUSTOM_VERSION=5.9.0"
+    )
+endif()
 
 FetchContent_Declare(
     STM32-CMSIS
