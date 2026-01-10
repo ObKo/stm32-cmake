@@ -180,7 +180,7 @@ execute_process(
 
 if(NOT TAG_EXISTS EQUAL 0)
     message(FATAL_ERROR 
-        "Could not find CMSIS version '${CMSIS_VERSION_TO_FETCH}'. "
+        "Could not find CMSIS version ${CMSIS_VERSION_TO_FETCH}"
         "Verify if the version exists at https://github.com/STMicroelectronics/cmsis-core/tags"
         "Example: cmake -DCMSIS_CUSTOM_VERSION=5.9.0"
     )
