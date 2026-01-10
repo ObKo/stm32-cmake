@@ -160,6 +160,7 @@ macro(stm32_pretty_print_dev_list FAMILIES STM_DEVICES)
 endmacro()
 
 include(FetchContent)
+find_package(Git REQUIRED)
 
 set(CMSIS_DEFAULT_VERSION "5.6.0") 
 set(CMSIS_CUSTOM_VERSION "" CACHE STRING "Custom CMSIS version")
@@ -172,7 +173,14 @@ endif()
 
 message(STATUS "Fetching CMSIS version: ${CMSIS_VERSION_TO_FETCH}")
 
-if(FETCH_FAILED)
+execute_process(
+    COMMAND ${GIT_EXECUTABLE} ls-remote --exit-code --refs https://github.com/STMicroelectronics/cmsis-core refs/tags/${CMSIS_VERSION_TO_FETCH}
+    OUTPUT_QUIET
+    ERROR_QUIET
+    RESULT_VARIABLE TAG_EXISTS
+)
+
+if(NOT TAG_EXISTS EQUAL 0)
     message(FATAL_ERROR 
         "Could not find CMSIS version '${CMSIS_VERSION_TO_FETCH}'. "
         "Verify if the version exists at https://github.com/STMicroelectronics/cmsis-core/tags"
