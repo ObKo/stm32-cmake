@@ -174,9 +174,7 @@ endif()
 message(STATUS "Fetching CMSIS version: ${CMSIS_VERSION_TO_FETCH}")
 
 execute_process(
-    COMMAND ${GIT_EXECUTABLE} ls-remote --exit-code --refs https://github.com/STMicroelectronics/cmsis-core refs/tags/${CMSIS_VERSION_TO_FETCH}
-    OUTPUT_QUIET
-    ERROR_QUIET
+    COMMAND ${GIT_EXECUTABLE} ls-remote --exit-code --refs https://github.com/STMicroelectronics/cmsis-core refs/tags/${CMSIS_VERSION_TO_FETCH} OUTPUT_QUIET ERROR_QUIET
     RESULT_VARIABLE TAG_EXISTS
 )
 
