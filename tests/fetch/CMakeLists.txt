@@ -55,5 +55,5 @@ set_tests_properties(UT_Version_Custom PROPERTIES PASS_REGULAR_EXPRESSION "Fetch
 # Should fail cuz version doesnt exist
 add_test(NAME UT_Version_Invalid COMMAND ${CMAKE_COMMAND} ${TEST_ARGS} -DCMSIS_CUSTOM_VERSION=9.1.1 "${CMAKE_CURRENT_SOURCE_DIR}"
 )
-set_tests_properties(UT_Version_Invalid PROPERTIES WILL_FAIL TRUE PASS_REGULAR_EXPRESSION "Could not find CMSIS version '9.9.9'"
+set_tests_properties(UT_Version_Invalid PROPERTIES WILL_FAIL TRUE PASS_REGULAR_EXPRESSION "Could not find CMSIS version 9.1.1"
 )
