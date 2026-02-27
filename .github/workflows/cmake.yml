@@ -67,7 +67,7 @@ jobs:
         echo "========================="
         ls ${{runner.workspace}}/tests/fetch/build/_deps/
         echo "========================="   
-        cmake -DTEST_FAMILIES=${{ matrix.family }} -DSTM32_CUBE_${{ matrix.family }}_PATH=${{runner.workspace}}/tests/fetch/build/_deps/stm32-hal-${FAMILY_LOWER}-src $GITHUB_WORKSPACE/tests/cmsis/
+        cmake -DTEST_FAMILIES=${{ matrix.family }} -DSTM32_CUBE_${{ matrix.family }}_PATH=${{runner.workspace}}/tests/fetch/build/_deps/stm32-hal-c0-src $GITHUB_WORKSPACE/tests/cmsis/
       if: ${{ matrix.family != 'MP1' }}
 
     - name: Build tests/cmsis with relative path
