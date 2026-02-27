@@ -157,6 +157,20 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS_FAMILIES})
         set(STM32_CUBE_${FAMILY}_PATH /opt/STM32Cube${FAMILY} CACHE PATH "Path to STM32Cube${FAMILY}")
         message(STATUS "Neither STM32_CUBE_${FAMILY}_PATH nor STM32_CMSIS_${FAMILY}_PATH specified using default STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
     endif()
+    
+    # Convert relative paths to absolute paths
+    if(STM32_CUBE_${FAMILY}_PATH)
+        get_filename_component(STM32_CUBE_${FAMILY}_PATH "${STM32_CUBE_${FAMILY}_PATH}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+        set(STM32_CUBE_${FAMILY}_PATH ${STM32_CUBE_${FAMILY}_PATH} CACHE PATH "Path to STM32Cube${FAMILY}" FORCE)
+    endif()
+    if(STM32_CMSIS_${FAMILY}_PATH)
+        get_filename_component(STM32_CMSIS_${FAMILY}_PATH "${STM32_CMSIS_${FAMILY}_PATH}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+        set(STM32_CMSIS_${FAMILY}_PATH ${STM32_CMSIS_${FAMILY}_PATH} CACHE PATH "Path to STM32 CMSIS ${FAMILY}" FORCE)
+    endif()
+    if(STM32_CMSIS_PATH)
+        get_filename_component(STM32_CMSIS_PATH "${STM32_CMSIS_PATH}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+        set(STM32_CMSIS_PATH ${STM32_CMSIS_PATH} CACHE PATH "Path to STM32 CMSIS" FORCE)
+    endif()
      
     # search for Include/cmsis_gcc.h
     find_path(CMSIS_${FAMILY}${CORE_U}_CORE_PATH
