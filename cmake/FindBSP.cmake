@@ -340,8 +340,8 @@ foreach(COMP ${BSP_FIND_COMPONENTS})
     endif()
 
     # Convert relative paths to absolute paths
-    if(STM32_CUBE_${FAMILY}_PATH)
-        get_filename_component(STM32_CUBE_${FAMILY}_PATH "${STM32_CUBE_${FAMILY}_PATH}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+    if(STM32_CUBE_${FAMILY}_PATH AND NOT IS_ABSOLUTE "${STM32_CUBE_${FAMILY}_PATH}")
+        get_filename_component(STM32_CUBE_${FAMILY}_PATH "${STM32_CUBE_${FAMILY}_PATH}" ABSOLUTE)
         set(STM32_CUBE_${FAMILY}_PATH ${STM32_CUBE_${FAMILY}_PATH} CACHE PATH "Path to STM32Cube${FAMILY}" FORCE)
     endif()
 
