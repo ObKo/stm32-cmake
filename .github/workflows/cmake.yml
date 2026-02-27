@@ -70,6 +70,7 @@ jobs:
       shell: bash
       run: cmake --build . --config $BUILD_TYPE
       if: ${{ matrix.family != 'MP1' }}
+      
 
     - name: Create build directory for tests/hal
       run: cmake -E make_directory ${{runner.workspace}}/tests/hal/build
