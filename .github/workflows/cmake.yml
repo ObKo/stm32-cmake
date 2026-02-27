@@ -56,15 +56,18 @@ jobs:
       run: cmake -E make_directory ${{runner.workspace}}/tests/cmsis/build-relative
       if: ${{ matrix.family != 'MP1' }}
 
+    # We are using the cmsis already fetched on previous test
     - name: Configure tests/cmsis with relative path
       shell: bash
       working-directory: ${{runner.workspace}}/tests/cmsis/build-relative
       run: |
-        ls ${{runner.workspace}}/tests/cmsis/build-relative
-        exit 1
-        # FAMILY_LOWER=$(echo "${{ matrix.family }}" | tr '[:upper:]' '[:lower:]')
-        # RELATIVE_PATH="../../cmsis/build-relative/_deps/stm32-cmsis-${FAMILY_LOWER}-src"
-        # cmake -DTEST_FAMILIES=${{ matrix.family }} -DSTM32_CUBE_${{ matrix.family }}_PATH=$RELATIVE_PATH "$GITHUB_WORKSPACE/tests/cmsis/"
+        FAMILY_LOWER=$(echo "${{ matrix.family }}" | tr '[:upper:]' '[:lower:]')
+        RELATIVE_PATH="../../fetch/build/_deps/stm32-hal-${FAMILY_LOWER}-src"
+        ls $RELATIVE_PATH
+        echo "========================="
+        ls ${{runner.workspace}}/tests/fetch/build/_deps/
+        echo "========================="   
+        cmake -DTEST_FAMILIES=${{ matrix.family }} -DSTM32_CUBE_${{ matrix.family }}_PATH=${RELATIVE_PATH} $GITHUB_WORKSPACE/tests/cmsis/
       if: ${{ matrix.family != 'MP1' }}
 
     - name: Build tests/cmsis with relative path
