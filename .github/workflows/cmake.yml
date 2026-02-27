@@ -60,10 +60,11 @@ jobs:
       shell: bash
       working-directory: ${{runner.workspace}}/tests/cmsis/build-relative
       run: |
-        ls . 
-        FAMILY_LOWER=$(echo "${{ matrix.family }}" | tr '[:upper:]' '[:lower:]')
-        RELATIVE_PATH="../../cmsis/build-relative/_deps/stm32-cmsis-${FAMILY_LOWER}-src"
-        cmake -DTEST_FAMILIES=${{ matrix.family }} -DSTM32_CUBE_${{ matrix.family }}_PATH=$RELATIVE_PATH "$GITHUB_WORKSPACE/tests/cmsis/"
+        ls ${{runner.workspace}}/tests/cmsis/build-relative
+        exit 1
+        # FAMILY_LOWER=$(echo "${{ matrix.family }}" | tr '[:upper:]' '[:lower:]')
+        # RELATIVE_PATH="../../cmsis/build-relative/_deps/stm32-cmsis-${FAMILY_LOWER}-src"
+        # cmake -DTEST_FAMILIES=${{ matrix.family }} -DSTM32_CUBE_${{ matrix.family }}_PATH=$RELATIVE_PATH "$GITHUB_WORKSPACE/tests/cmsis/"
       if: ${{ matrix.family != 'MP1' }}
 
     - name: Build tests/cmsis with relative path
