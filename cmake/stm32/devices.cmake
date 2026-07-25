@@ -160,13 +160,34 @@ macro(stm32_pretty_print_dev_list FAMILIES STM_DEVICES)
 endmacro()
 
 
-
 include(FetchContent)
 
+# Allow user to optionally define this via command line or script
+# Example: cmake -DCMSIS_CUSTOM_VERSION=5.9.0
+
+# Define a list of valid CMSIS versions
+# TODO: Update newer CMSIS versions when released 
+list(APPEND VALID_CMSIS_VERSIONS " 5.9.0" " 5.6.0_cm3" " 5.6.0_cm7" " 5.6.0_cm0" " 5.6.0_cm33" " 5.6.0" " 5.6.0_cm4" " 5.4.0" " 5.4.0_cm33" " 5.4.0_cm7")
+
+set(CMSIS_CUSTOM_VERSION "" CACHE STRING "Optional custom CMSIS version")
+
+# Use the custom version if provided, otherwise fall back to default
+if(DEFINED CMSIS_CUSTOM_VERSION AND NOT "${CMSIS_CUSTOM_VERSION}" STREQUAL "")
+    list(FIND VALID_CMSIS_VERSIONS " ${CMSIS_CUSTOM_VERSION}" VALID_VERSION_INDEX)
+    if(VALID_VERSION_INDEX EQUAL -1)
+        message(FATAL_ERROR "Invalid CMSIS version provided ${CMSIS_CUSTOM_VERSION}. Supported versions are: ${VALID_CMSIS_VERSIONS}")
+    else()
+        set(CMSIS_VERSION_TO_USE "v${CMSIS_CUSTOM_VERSION}")
+    endif()
+else()
+    set(CMSIS_VERSION_TO_USE "v5.6.0")
+endif()
+
+# FetchContent using the selected version
 FetchContent_Declare(
     STM32-CMSIS
     GIT_REPOSITORY https://github.com/STMicroelectronics/cmsis_core/
-    GIT_TAG        v5.6.0
+    GIT_TAG        ${CMSIS_VERSION_TO_USE}
     GIT_PROGRESS   TRUE
 )
 
