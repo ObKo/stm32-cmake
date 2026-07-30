@@ -339,6 +339,12 @@ foreach(COMP ${BSP_FIND_COMPONENTS})
         message(STATUS "No STM32_CUBE_${FAMILY}_PATH specified using default: ${STM32_CUBE_${FAMILY}_PATH}")
     endif()
 
+    # Convert relative paths to absolute paths
+    if(STM32_CUBE_${FAMILY}_PATH AND NOT IS_ABSOLUTE "${STM32_CUBE_${FAMILY}_PATH}")
+        get_filename_component(STM32_CUBE_${FAMILY}_PATH "${STM32_CUBE_${FAMILY}_PATH}" ABSOLUTE)
+        set(STM32_CUBE_${FAMILY}_PATH ${STM32_CUBE_${FAMILY}_PATH} CACHE PATH "Path to STM32Cube${FAMILY}" FORCE)
+    endif()
+
     set(BSP_${FAMILY}_PATH "${STM32_CUBE_${FAMILY}_PATH}/Drivers/BSP")
     if(NOT EXISTS ${BSP_${FAMILY}_PATH})
         continue()

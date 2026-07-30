@@ -237,6 +237,12 @@ else()
             message(STATUS "Did not specify STM32_CMSIS_${FAMILY}_PATH, using default STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
         endif()
         
+        # Convert relative paths to absolute paths
+        if(STM32_CUBE_${FAMILY}_PATH AND NOT IS_ABSOLUTE "${STM32_CUBE_${FAMILY}_PATH}")
+            get_filename_component(STM32_CUBE_${FAMILY}_PATH "${STM32_CUBE_${FAMILY}_PATH}" ABSOLUTE)
+            set(STM32_CUBE_${FAMILY}_PATH ${STM32_CUBE_${FAMILY}_PATH} CACHE PATH "Path to STM32Cube${FAMILY}" FORCE)
+        endif()
+        
         stm32_find_freertos(FreeRTOS::STM32::${FAMILY}${CORE_C} ${STM32_CUBE_${FAMILY}_PATH}/Middlewares/Third_Party/FreeRTOS)
         foreach(PORT_COMP ${FreeRTOS_FIND_COMPONENTS_PORTS})
             if(FreeRTOS_${PORT_COMP}_PATH AND 

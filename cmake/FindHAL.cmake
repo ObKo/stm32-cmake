@@ -167,6 +167,16 @@ foreach(COMP ${HAL_FIND_COMPONENTS_FAMILIES})
         message(STATUS "Neither STM32_CUBE_${FAMILY}_PATH nor STM32_HAL_${FAMILY}_PATH specified using default STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
     endif()
 
+    # Convert relative paths to absolute paths
+    if(STM32_CUBE_${FAMILY}_PATH AND NOT IS_ABSOLUTE "${STM32_CUBE_${FAMILY}_PATH}")
+        get_filename_component(STM32_CUBE_${FAMILY}_PATH "${STM32_CUBE_${FAMILY}_PATH}" ABSOLUTE)
+        set(STM32_CUBE_${FAMILY}_PATH ${STM32_CUBE_${FAMILY}_PATH} CACHE PATH "Path to STM32Cube${FAMILY}" FORCE)
+    endif()
+    if(STM32_HAL_${FAMILY}_PATH AND NOT IS_ABSOLUTE "${STM32_HAL_${FAMILY}_PATH}")
+        get_filename_component(STM32_HAL_${FAMILY}_PATH "${STM32_HAL_${FAMILY}_PATH}" ABSOLUTE)
+        set(STM32_HAL_${FAMILY}_PATH ${STM32_HAL_${FAMILY}_PATH} CACHE PATH "Path to STM32 HAL ${FAMILY}" FORCE)
+    endif()
+
     #Checking HAL patch or release version
     unset(VERSION_INFO)
     find_file(PACKAGE_FILE NAMES package.xml PATHS ${STM32_CUBE_${FAMILY}_PATH})
