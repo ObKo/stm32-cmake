@@ -290,7 +290,9 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS_FAMILIES})
 
         find_path(CMSIS_${FAMILY}${CORE_U}_${RTOS_COMP}_PATH
             NAMES "cmsis_os${RTOS_COMP_VERSION}.h"
-            PATHS "${STM32_CUBE_${FAMILY}_PATH}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_${RTOS_COMP}"
+            PATHS
+                "${STM32_CUBE_${FAMILY}_PATH}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_${RTOS_COMP}"
+                "${STM32_CUBE_${FAMILY}_PATH}/Drivers/CMSIS/RTOS2/Include"
             NO_DEFAULT_PATH
         )
         if (NOT CMSIS_${FAMILY}${CORE_U}_${RTOS_COMP}_PATH)
@@ -299,7 +301,9 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS_FAMILIES})
 
         find_file(CMSIS_${FAMILY}${CORE_U}_${RTOS_COMP}_SOURCE
             NAMES "cmsis_os${RTOS_COMP_VERSION}.c"
-            PATHS "${STM32_CUBE_${FAMILY}_PATH}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_${RTOS_COMP}"
+            PATHS
+                "${STM32_CUBE_${FAMILY}_PATH}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_${RTOS_COMP}"
+                "${STM32_CUBE_${FAMILY}_PATH}/Drivers/CMSIS/RTOS2/Template"
             NO_DEFAULT_PATH
         )
         if (NOT CMSIS_${FAMILY}${CORE_U}_${RTOS_COMP}_SOURCE)
