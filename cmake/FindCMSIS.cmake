@@ -318,6 +318,13 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS_FAMILIES})
         set(CMSIS_${RTOS_COMP}_FOUND TRUE)
     endforeach()
 
+    if(NOT (TARGET CMSIS::STM32::${FAMILY}${CORE_C}::DSP}))
+        add_library(CMSIS::STM32::${FAMILY}${CORE_C}::DSP INTERFACE IMPORTED)
+        target_link_libraries(CMSIS::STM32::${FAMILY}${CORE_C}::DSP INTERFACE CMSIS::STM32::${FAMILY}${CORE_C})
+        target_link_directories(CMSIS::STM32::${FAMILY}${CORE_C}::DSP INTERFACE "${CMSIS_${FAMILY}${CORE_U}_CORE_PATH}/DSP/Lib/GCC/")
+        target_include_directories(CMSIS::STM32::${FAMILY}${CORE_C}::DSP INTERFACE "${CMSIS_${FAMILY}${CORE_U}_CORE_PATH}/DSP/Include")
+    endif()
+
     list(REMOVE_DUPLICATES CMSIS_INCLUDE_DIRS)
     list(REMOVE_DUPLICATES CMSIS_SOURCES)
 endforeach()
