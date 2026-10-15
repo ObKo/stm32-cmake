@@ -203,7 +203,8 @@ foreach(COMP ${CMSIS_FIND_COMPONENTS_FAMILIES})
     endif()
     
     set(CMSIS_${COMP}_VERSION ${CMSIS_${FAMILY}${CORE_U}_VERSION})
-    set(CMSIS_VERSION ${CMSIS_${COMP}_VERSION})
+    # strip v from version string v1.2.6=>1.2.6
+    string(REGEX REPLACE "^v" "" CMSIS_VERSION ${CMSIS_${COMP}_VERSION})
 
     if(NOT (TARGET CMSIS::STM32::${FAMILY}${CORE_C}))
         message(TRACE "FindCMSIS: creating library CMSIS::STM32::${FAMILY}${CORE_C}")

@@ -167,24 +167,6 @@ foreach(COMP ${HAL_FIND_COMPONENTS_FAMILIES})
         message(STATUS "Neither STM32_CUBE_${FAMILY}_PATH nor STM32_HAL_${FAMILY}_PATH specified using default STM32_CUBE_${FAMILY}_PATH: ${STM32_CUBE_${FAMILY}_PATH}")
     endif()
 
-    #Checking HAL patch or release version
-    unset(VERSION_INFO)
-    find_file(PACKAGE_FILE NAMES package.xml PATHS ${STM32_CUBE_${FAMILY}_PATH})
-    if(PACKAGE_FILE)
-        file(READ ${PACKAGE_FILE} PACKAGE_FILE_CONTENT)
-        string(REGEX MATCH "PackDescription Release=\"FW.${FAMILY}.([0-9.]+)\"( Patch=\"FW.${FAMILY}.([0-9.]+)\")?" VERSION_INFO ${PACKAGE_FILE_CONTENT})
-        if(CMAKE_MATCH_3) # This is the "Patch" revision
-            set(HAL_${COMP}_VERSION ${CMAKE_MATCH_3})
-            set(HAL_VERSION ${CMAKE_MATCH_3})
-        else(CMAKE_MATCH_1) #This is the "Release" version 
-            set(HAL_${COMP}_VERSION ${CMAKE_MATCH_1})
-            set(HAL_VERSION ${CMAKE_MATCH_1})
-        endif()
-    endif()
-    if(NOT VERSION_INFO)
-        message(STATUS "Could not read the HAL version from package.xml for ${COMP}")
-    endif()
-
     find_path(HAL_${FAMILY}_PATH
         NAMES Inc/stm32${FAMILY_L}xx_hal.h
         PATHS "${STM32_HAL_${FAMILY}_PATH}" "${STM32_CUBE_${FAMILY}_PATH}/Drivers/STM32${FAMILY}xx_HAL_Driver"
@@ -210,6 +192,30 @@ foreach(COMP ${HAL_FIND_COMPONENTS_FAMILIES})
         set(HAL_${COMP}_FOUND FALSE)
         message(DEBUG "FindHAL: did not find path to HAL /src or /inc dir")
         continue()
+    endif()
+
+    # Read the version from the selected HAL driver, not the Cube package.
+    unset(HAL_VERSION)
+    unset(HAL_${COMP}_VERSION)
+    file(READ "${HAL_${FAMILY}${CORE_U}_SOURCE}" HAL_SOURCE_CONTENT)
+    set(HAL_VERSION_PARTS)
+    foreach(PART MAIN SUB1 SUB2)
+        string(REGEX MATCH
+            "#define[ \t]+__STM32${FAMILY}xx_HAL_VERSION_${PART}[ \t]+\\(0[xX]([0-9A-Fa-f]+)[uU]?\\)"
+            HAL_VERSION_MATCH "${HAL_SOURCE_CONTENT}"
+        )
+        if(NOT HAL_VERSION_MATCH)
+            break()
+        endif()
+        math(EXPR HAL_VERSION_PART "0x${CMAKE_MATCH_1}")
+        list(APPEND HAL_VERSION_PARTS "${HAL_VERSION_PART}")
+    endforeach()
+    list(LENGTH HAL_VERSION_PARTS HAL_VERSION_PART_COUNT)
+    if(HAL_VERSION_PART_COUNT EQUAL 3)
+        list(JOIN HAL_VERSION_PARTS "." HAL_VERSION)
+        set(HAL_${COMP}_VERSION "${HAL_VERSION}")
+    else()
+        message(STATUS "Could not read the HAL version from ${HAL_${FAMILY}${CORE_U}_SOURCE}")
     endif()
 
     if(NOT (TARGET HAL::STM32::${FAMILY}${CORE_C}))
@@ -312,5 +318,6 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(HAL
     REQUIRED_VARS HAL_INCLUDE_DIRS HAL_SOURCES
     FOUND_VAR HAL_FOUND
+    VERSION_VAR HAL_VERSION
     HANDLE_COMPONENTS
 )
